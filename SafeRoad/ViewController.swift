@@ -6,14 +6,38 @@
 //
 
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController {
+    
+    let motionManager = CMMotionManager()
+        var timer: Timer!
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            motionManager.startAccelerometerUpdates()
+            motionManager.startGyroUpdates()
+            motionManager.startMagnetometerUpdates()
+            motionManager.startDeviceMotionUpdates()
+            
+            timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+        }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-
+        @objc func update() {
+            if let accelerometerData = motionManager.accelerometerData {
+                print(accelerometerData)
+            }
+            if let gyroData = motionManager.gyroData {
+                print(gyroData)
+            }
+            if let magnetometerData = motionManager.magnetometerData {
+                print(magnetometerData)
+            }
+            if let deviceMotion = motionManager.deviceMotion {
+                print(deviceMotion)
+            }
+        }
 
 }
 
