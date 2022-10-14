@@ -66,8 +66,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tV-Yk-cHs">
-                                <rect key="frame" x="338" y="741" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQd-DT-ahG">
+                                <rect key="frame" x="338" y="720" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -78,8 +78,8 @@
                         <constraints>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="leading" secondItem="icb-2I-b9z" secondAttribute="leading" id="7At-9a-y5T"/>
                             <constraint firstItem="icb-2I-b9z" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="DXZ-Mt-0oR"/>
-                            <constraint firstItem="4tV-Yk-cHs" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="-10" id="EJL-qP-miD"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="100" id="HdH-ma-9Jg"/>
+                            <constraint firstItem="ZQd-DT-ahG" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="-10" id="JOh-am-0YL"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="100" id="Kgm-iI-Uho"/>
                             <constraint firstItem="6hR-7Y-Tye" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="20" id="Pgs-82-0hg"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="p0B-Ta-Gna" secondAttribute="bottom" constant="15" id="RHp-D8-uQA"/>
@@ -88,16 +88,16 @@
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
                             <constraint firstItem="6hR-7Y-Tye" firstAttribute="centerX" secondItem="3DO-zw-G3V" secondAttribute="centerX" id="evy-XP-gx3"/>
                             <constraint firstItem="p0B-Ta-Gna" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="30" id="grV-Sg-FSQ"/>
+                            <constraint firstItem="ZQd-DT-ahG" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="oBs-mh-KKS"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="top" secondItem="icb-2I-b9z" secondAttribute="bottom" constant="10" id="vx0-dy-BFn"/>
-                            <constraint firstItem="4tV-Yk-cHs" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="31" id="yrY-nB-fJ8"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="accelLabel" destination="ZQd-DT-ahG" id="mBG-v9-htA"/>
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
-                        <outlet property="statusLabel" destination="4tV-Yk-cHs" id="yY6-l5-HzG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ldn-Bb-MrO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

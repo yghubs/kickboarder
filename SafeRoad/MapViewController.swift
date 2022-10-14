@@ -15,7 +15,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var myMap: MKMapView!
     @IBOutlet weak var locationInfo1: UILabel!
     @IBOutlet weak var locationInfo2: UILabel!
-    @IBOutlet weak var statusLabel: UILabel!
+//    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var accelLabel: UILabel!
     
     let locationManager = CLLocationManager()
     let motionManager = CMMotionManager()
@@ -36,25 +37,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         myMap.showsUserLocation = true
         
         //MARK: accelerometer & gyroscope Data
-        motionManager.startGyroUpdates()
+//        motionManager.startGyroUpdates()
         motionManager.startAccelerometerUpdates()
-        motionManager.accelerometerUpdateInterval = 1
+        motionManager.accelerometerUpdateInterval = 0.001
         
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if let data = self.motionManager.accelerometerData {
-                let x = data.acceleration.x
-                let y = data.acceleration.y
-                let z = data.acceleration.z
-                
-                print(x)
-    
-            }
-            
-            if let gyroData = self.motionManager.gyroData {
-                gyroData.rotationRate.x
-            }
-        }
         
     }
     
@@ -110,12 +97,35 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             self.locationInfo2.text = address
         })
         
-        self.myMap.showsUserLocation = true
-        statusLabel.text = "\(locations[0].speed)"
-        if (locations[0].speed > 33 && locations[0].speed < 33.2) {
-            currentLoc = locationManager.location
-            setAnnotation(latitudeValue: currentLoc.coordinate.latitude, longitudeValue: currentLoc.coordinate.longitude, delta: 0.1, title: "United State of America", subtitle: "nuclear")
+        Timer.scheduledTimer(withTimeInterval: 0.001, repeats: true) { _ in
+            
+            
+            
+            
+            if let data = self.motionManager.accelerometerData {
+                let x = data.acceleration.x
+                let y = data.acceleration.y
+                let z = data.acceleration.z
+                let accelMagnitude = sqrt(x*x + y*y + z*z)
+                
+                self.accelLabel.text = "현재 가속도는 \(String(format: "%.2f",accelMagnitude)) 입니다"
+                if accelMagnitude > 2 {
+                    self.currentLoc = self.locationManager.location
+                    self.setAnnotation(latitudeValue: self.currentLoc.coordinate.latitude, longitudeValue: self.currentLoc.coordinate.longitude, delta: 0.1, title: "충격량 감지", subtitle: self.locationInfo2.text!)
+                }
+    
+            }
+        
+            if let gyroData = self.motionManager.gyroData {
+                gyroData.rotationRate.x
+            }
         }
+        self.myMap.showsUserLocation = true
+//        statusLabel.text = "\(locations[0].speed)"
+//        if (locations[0].speed > 33 && locations[0].speed < 33.2) {
+//            currentLoc = locationManager.location
+//            setAnnotation(latitudeValue: currentLoc.coordinate.latitude, longitudeValue: currentLoc.coordinate.longitude, delta: 0.1, title: "United State of America", subtitle: "nuclear")
+//        }
     
     
         
@@ -141,3 +151,4 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
 }
+
