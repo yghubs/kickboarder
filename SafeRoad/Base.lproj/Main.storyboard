@@ -34,7 +34,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ofv-ZK-eNy">
-                                <rect key="frame" x="20" y="147" width="350" height="563"/>
+                                <rect key="frame" x="0.0" y="147" width="390" height="563"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="도로 위 돌출 탐지, 경고 시스템" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6hR-7Y-Tye">
@@ -55,19 +55,19 @@
                                 </connections>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
-                                <rect key="frame" x="20" y="720" width="42" height="21"/>
+                                <rect key="frame" x="10" y="720" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
-                                <rect key="frame" x="20" y="751" width="42" height="21"/>
+                                <rect key="frame" x="10" y="751" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tV-Yk-cHs">
-                                <rect key="frame" x="328" y="741" width="42" height="21"/>
+                                <rect key="frame" x="338" y="741" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -78,17 +78,17 @@
                         <constraints>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="leading" secondItem="icb-2I-b9z" secondAttribute="leading" id="7At-9a-y5T"/>
                             <constraint firstItem="icb-2I-b9z" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="DXZ-Mt-0oR"/>
-                            <constraint firstItem="4tV-Yk-cHs" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="EJL-qP-miD"/>
+                            <constraint firstItem="4tV-Yk-cHs" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="-10" id="EJL-qP-miD"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="100" id="HdH-ma-9Jg"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="100" id="Kgm-iI-Uho"/>
                             <constraint firstItem="6hR-7Y-Tye" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="20" id="Pgs-82-0hg"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="p0B-Ta-Gna" secondAttribute="bottom" constant="15" id="RHp-D8-uQA"/>
-                            <constraint firstItem="icb-2I-b9z" firstAttribute="leading" secondItem="ofv-ZK-eNy" secondAttribute="leading" id="ThP-xu-oV5"/>
+                            <constraint firstItem="icb-2I-b9z" firstAttribute="leading" secondItem="ofv-ZK-eNy" secondAttribute="leading" constant="10" id="ThP-xu-oV5"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="p0B-Ta-Gna" secondAttribute="trailing" constant="30" id="bvf-Xw-i7f"/>
-                            <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="20" id="egj-gw-Te0"/>
+                            <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
                             <constraint firstItem="6hR-7Y-Tye" firstAttribute="centerX" secondItem="3DO-zw-G3V" secondAttribute="centerX" id="evy-XP-gx3"/>
                             <constraint firstItem="p0B-Ta-Gna" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="30" id="grV-Sg-FSQ"/>
-                            <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="20" id="uqM-dc-jQW"/>
+                            <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="top" secondItem="icb-2I-b9z" secondAttribute="bottom" constant="10" id="vx0-dy-BFn"/>
                             <constraint firstItem="4tV-Yk-cHs" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="31" id="yrY-nB-fJ8"/>
                         </constraints>

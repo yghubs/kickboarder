@@ -8,15 +8,19 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreMotion
+
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet weak var myMap: MKMapView!
     @IBOutlet weak var locationInfo1: UILabel!
     @IBOutlet weak var locationInfo2: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
+    
     let locationManager = CLLocationManager()
+    let motionManager = CMMotionManager()
+    
     var currentLoc: CLLocation!
-    let mark = Marker(coordinate: CLLocationCoordinate2D(latitude: 37.3261, longitude: 126.8333))
     
     override func viewDidLoad() {
         locationInfo1.text = ""
@@ -30,8 +34,32 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         // 위치 보기 설정
         myMap.showsUserLocation = true
-        myMap.addAnnotation(mark)
+        
+        //MARK: accelerometer & gyroscope Data
+        motionManager.startGyroUpdates()
+        motionManager.startAccelerometerUpdates()
+        motionManager.accelerometerUpdateInterval = 1
+        
+        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if let data = self.motionManager.accelerometerData {
+                let x = data.acceleration.x
+                let y = data.acceleration.y
+                let z = data.acceleration.z
+                
+                print(x)
+    
+            }
+            
+            if let gyroData = self.motionManager.gyroData {
+                gyroData.rotationRate.x
+            }
+        }
+        
     }
+    
+    
+    
     
     // 위도와 경도, 스팬(영역 폭)을 입력받아 지도에 표시
        func goLocation(latitudeValue: CLLocationDegrees,
@@ -84,7 +112,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
         self.myMap.showsUserLocation = true
         statusLabel.text = "\(locations[0].speed)"
-        if locations[0].speed > 34 {
+        if (locations[0].speed > 33 && locations[0].speed < 33.2) {
             currentLoc = locationManager.location
             setAnnotation(latitudeValue: currentLoc.coordinate.latitude, longitudeValue: currentLoc.coordinate.longitude, delta: 0.1, title: "United State of America", subtitle: "nuclear")
         }
