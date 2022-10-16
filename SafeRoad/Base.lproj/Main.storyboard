@@ -37,12 +37,6 @@
                                 <rect key="frame" x="0.0" y="147" width="390" height="563"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="도로 위 돌출 탐지, 경고 시스템" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6hR-7Y-Tye">
-                                <rect key="frame" x="93.666666666666686" y="67" width="203" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="p0B-Ta-Gna">
                                 <rect key="frame" x="30" y="101" width="330" height="32"/>
                                 <segments>
@@ -54,24 +48,29 @@
                                     <action selector="locationSegment:" destination="UCB-hs-Z51" eventType="valueChanged" id="bn2-Dv-KKo"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
-                                <rect key="frame" x="10" y="720" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="현재위치" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
+                                <rect key="frame" x="10" y="720" width="59" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
-                                <rect key="frame" x="10" y="751" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="주소 정보" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
+                                <rect key="frame" x="10" y="751" width="64" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQd-DT-ahG">
-                                <rect key="frame" x="338" y="720" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="가속도 값" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQd-DT-ahG">
+                                <rect key="frame" x="316" y="720" width="64" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="T58-gk-wQ5">
+                                <rect key="frame" x="147" y="47" width="97" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -81,13 +80,13 @@
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="100" id="HdH-ma-9Jg"/>
                             <constraint firstItem="ZQd-DT-ahG" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="-10" id="JOh-am-0YL"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="100" id="Kgm-iI-Uho"/>
-                            <constraint firstItem="6hR-7Y-Tye" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="20" id="Pgs-82-0hg"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="p0B-Ta-Gna" secondAttribute="bottom" constant="15" id="RHp-D8-uQA"/>
                             <constraint firstItem="icb-2I-b9z" firstAttribute="leading" secondItem="ofv-ZK-eNy" secondAttribute="leading" constant="10" id="ThP-xu-oV5"/>
+                            <constraint firstItem="T58-gk-wQ5" firstAttribute="centerX" secondItem="3DO-zw-G3V" secondAttribute="centerX" id="VUi-l4-5dr"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="p0B-Ta-Gna" secondAttribute="trailing" constant="30" id="bvf-Xw-i7f"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
-                            <constraint firstItem="6hR-7Y-Tye" firstAttribute="centerX" secondItem="3DO-zw-G3V" secondAttribute="centerX" id="evy-XP-gx3"/>
                             <constraint firstItem="p0B-Ta-Gna" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="30" id="grV-Sg-FSQ"/>
+                            <constraint firstItem="T58-gk-wQ5" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" id="j74-XT-cme"/>
                             <constraint firstItem="ZQd-DT-ahG" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="oBs-mh-KKS"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="top" secondItem="icb-2I-b9z" secondAttribute="bottom" constant="10" id="vx0-dy-BFn"/>
@@ -98,6 +97,7 @@
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
+                        <outlet property="testTF" destination="T58-gk-wQ5" id="ZHu-Sf-dwD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ldn-Bb-MrO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
