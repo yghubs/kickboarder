@@ -66,11 +66,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="T58-gk-wQ5">
-                                <rect key="frame" x="147" y="47" width="97" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -82,11 +77,9 @@
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="100" id="Kgm-iI-Uho"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="p0B-Ta-Gna" secondAttribute="bottom" constant="15" id="RHp-D8-uQA"/>
                             <constraint firstItem="icb-2I-b9z" firstAttribute="leading" secondItem="ofv-ZK-eNy" secondAttribute="leading" constant="10" id="ThP-xu-oV5"/>
-                            <constraint firstItem="T58-gk-wQ5" firstAttribute="centerX" secondItem="3DO-zw-G3V" secondAttribute="centerX" id="VUi-l4-5dr"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="p0B-Ta-Gna" secondAttribute="trailing" constant="30" id="bvf-Xw-i7f"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
                             <constraint firstItem="p0B-Ta-Gna" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="30" id="grV-Sg-FSQ"/>
-                            <constraint firstItem="T58-gk-wQ5" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" id="j74-XT-cme"/>
                             <constraint firstItem="ZQd-DT-ahG" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="oBs-mh-KKS"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="top" secondItem="icb-2I-b9z" secondAttribute="bottom" constant="10" id="vx0-dy-BFn"/>
@@ -97,7 +90,6 @@
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
-                        <outlet property="testTF" destination="T58-gk-wQ5" id="ZHu-Sf-dwD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ldn-Bb-MrO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

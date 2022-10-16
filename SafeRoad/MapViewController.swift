@@ -10,11 +10,12 @@ import MapKit
 import CoreMotion
 import FirebaseFirestore
 
-
-var riskLocations = [(String, CLLocation)]()
-class MapViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
+var testLatitude = [Double?]()
+var testLongitude = [Double?]()
+class MapViewController: UIViewController, CLLocationManagerDelegate {
     
-    @IBOutlet weak var testTF: UITextField!
+    var db: Firestore!
+    
     @IBOutlet weak var myMap: MKMapView!
     @IBOutlet weak var locationInfo1: UILabel!
     @IBOutlet weak var locationInfo2: UILabel!
@@ -46,32 +47,75 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UITextFiel
 
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
-        testTF.delegate = self
+        db = Firestore.firestore()
         //MARK: firebase Database
         
-        let docRef = database.document("saferoad/example")
-        docRef.getDocument { snapshot , error in
-            guard let data = snapshot?.data(), error == nil else {
-                return
+//        docRef.getDocument { snapshot , error in
+//            guard let data = snapshot?.data(), error == nil else {
+//                return
+//            }
+//
+//            print(data)
+//        }
+        getRiskLocationData()
+//        markingKnownRiskLocation()
+        print("--------  \(testLatitude.count) ")
+    }
+//
+//    func doubleToCLLocation() -> CLLocation {
+////        var locationOfDouble = [data1, data2]
+//        var locationOfCLLocation = CLLocation(latitude: _, longitude: _)
+//        return locationOfCLLocation
+//    }
+    
+    func getRiskLocationData() {
+      
+        db.collection("saferoad").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    
+//                    setAnnotation(latitudeValue: document.get("latitude"), longitudeValue: document.get("longitude"), delta: 0.1, title: "충격감지", subtitle: "주의")
+                    let latitudes = String(describing: document.get("latitude")!)
+                    let longitudes = String(describing: document.get("longitude")!)
+                    let doubleLatitudes = Double(latitudes)
+                    let doubleLongitudes = Double(longitudes)
+                    self.setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "", subtitle: "")
+                }
+                
+                
             }
-            
-            print(data)
         }
-        
-        
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let text = testTF.text, !text.isEmpty {
-            saveData(text: text)
-        }
-        return true
-    }
-    //MARK: write on Database
-    func saveData(text: String) {
-        let docRef = database.document("saferoad/example")
-        docRef.setData(["text" : text])
-    }
+//    func anyToDouble(data: Any?) -> Double? {
+//
+//
+//    }
+//
+//    func markingKnownRiskLocation() {
+//        setAnnotation(latitudeValue: testLatitude[0], longitudeValue: testLongitude[0], delta: 0.1, title: "", subtitle: "")
+//    }
+    
+    let sampleData : [(String, CLLocation)] = [("아무위치", CLLocation(latitude: 37, longitude: 126))]
+//    private func addDocument() {
+//        // [START add_document]
+//        // Add a new document with a generated id.
+//        var ref: DocumentReference? = nil
+//        ref = db.collection("saferoad").addDocument(data: [
+//            "name": "Tokyo",
+//            "country": "Japan"
+//        ]) { err in
+//            if let err = err {
+//                print("Error adding document: \(err)")
+//            } else {
+//                print("Document added with ID: \(ref!.documentID)")
+//            }
+//        }
+//        // [END add_document]
+//    }
+    
     
     
     // 위도와 경도, 스팬(영역 폭)을 입력받아 지도에 표시
@@ -141,12 +185,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, UITextFiel
             //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
             if accelMagnitude > 1.5 {
                 self.currentLoc = self.locationManager.location
-                let liveLatitude = self.currentLoc.coordinate.latitude
-                let liveLongitude = self.currentLoc.coordinate.longitude
-                self.setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격량 감지", subtitle: self.locationInfo2.text!)
-                riskLocations.append((self.locationInfo2.text!, CLLocation(latitude: liveLatitude, longitude: liveLongitude)))
-                print("--------------------------------")
-                print(riskLocations.count)
+                let liveLatitude = Double(self.currentLoc.coordinate.latitude)
+                let liveLongitude = Double(self.currentLoc.coordinate.longitude)
+                self.setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!)
+                var ref: DocumentReference? = nil
+                ref = self.db.collection("saferoad").addDocument(data: [
+                    "latitude" : liveLatitude,
+                    "longitude" : liveLongitude
+                ]) { err in
+                    if let err = err {
+                        print("Error adding document: \(err)")
+                    } else {
+                        print("Document added with ID: \(ref!.documentID)")
+                    }
+                }
+
                 sleep(1)
             }
             guard let gyroData = self.motionManager.gyroData else {return }
