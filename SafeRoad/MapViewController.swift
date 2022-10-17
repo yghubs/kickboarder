@@ -9,9 +9,10 @@ import UIKit
 import MapKit
 import CoreMotion
 import FirebaseFirestore
+var riskLocationCoordinates = [CLLocation]()
 
-var testLatitude = [Double?]()
-var testLongitude = [Double?]()
+
+
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
@@ -21,6 +22,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var locationInfo2: UILabel!
     //    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var accelLabel: UILabel!
+    
+    
     
     let locationManager = CLLocationManager()
     let motionManager = CMMotionManager()
@@ -44,44 +47,50 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
         //MARK: accelerometer & gyroscope Data
         //        motionManager.startGyroUpdates()
-
+        
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
         db = Firestore.firestore()
         //MARK: firebase Database
         
-//        docRef.getDocument { snapshot , error in
-//            guard let data = snapshot?.data(), error == nil else {
-//                return
-//            }
-//
-//            print(data)
-//        }
+        //        docRef.getDocument { snapshot , error in
+        //            guard let data = snapshot?.data(), error == nil else {
+        //                return
+        //            }
+        //
+        //            print(data)
+        //        }
         getRiskLocationData()
-//        markingKnownRiskLocation()
-        print("--------  \(testLatitude.count) ")
+        //        markingKnownRiskLocation()
+        
+        
+        
+        
     }
-//
-//    func doubleToCLLocation() -> CLLocation {
-////        var locationOfDouble = [data1, data2]
-//        var locationOfCLLocation = CLLocation(latitude: _, longitude: _)
-//        return locationOfCLLocation
-//    }
+    //
+    //    func doubleToCLLocation() -> CLLocation {
+    ////        var locationOfDouble = [data1, data2]
+    //        var locationOfCLLocation = CLLocation(latitude: _, longitude: _)
+    //        return locationOfCLLocation
+    //    }
+    
     
     func getRiskLocationData() {
-      
+        
         db.collection("saferoad").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
                     
-//                    setAnnotation(latitudeValue: document.get("latitude"), longitudeValue: document.get("longitude"), delta: 0.1, title: "충격감지", subtitle: "주의")
+                    //                    setAnnotation(latitudeValue: document.get("latitude"), longitudeValue: document.get("longitude"), delta: 0.1, title: "충격감지", subtitle: "주의")
                     let latitudes = String(describing: document.get("latitude")!)
                     let longitudes = String(describing: document.get("longitude")!)
                     let doubleLatitudes = Double(latitudes)
                     let doubleLongitudes = Double(longitudes)
                     self.setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "", subtitle: "")
+                    riskLocationCoordinates.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
+                    
                 }
                 
                 
@@ -89,32 +98,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-//    func anyToDouble(data: Any?) -> Double? {
-//
-//
-//    }
-//
-//    func markingKnownRiskLocation() {
-//        setAnnotation(latitudeValue: testLatitude[0], longitudeValue: testLongitude[0], delta: 0.1, title: "", subtitle: "")
-//    }
-    
-    let sampleData : [(String, CLLocation)] = [("아무위치", CLLocation(latitude: 37, longitude: 126))]
-//    private func addDocument() {
-//        // [START add_document]
-//        // Add a new document with a generated id.
-//        var ref: DocumentReference? = nil
-//        ref = db.collection("saferoad").addDocument(data: [
-//            "name": "Tokyo",
-//            "country": "Japan"
-//        ]) { err in
-//            if let err = err {
-//                print("Error adding document: \(err)")
-//            } else {
-//                print("Document added with ID: \(ref!.documentID)")
-//            }
-//        }
-//        // [END add_document]
-//    }
     
     
     
@@ -142,13 +125,22 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         myMap.addAnnotation(annotation)
     }
     
+    var userLocationRecord = [CLLocation]()
+    
     // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let pLocation = locations.last
+        userLocationRecord.append(pLocation!)
+        print(userLocationRecord.count)
+        if userLocationRecord.count > 10 {
+            for i in 0...8{
+                userLocationRecord.remove(at: 0)
+            }
+        }
         
-//        _ = goLocation(latitudeValue: (pLocation?.coordinate.latitude)!,
-//                       longtudeValue: (pLocation?.coordinate.longitude)!,
-//                       delta: 0.01)
+        //        _ = goLocation(latitudeValue: (pLocation?.coordinate.latitude)!,
+        //                       longtudeValue: (pLocation?.coordinate.longitude)!,
+        //                       delta: 0.01)
         CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
             let pm = placemarks?.first
             let country = pm?.country
@@ -182,6 +174,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             
             self.accelLabel.text = "현재 가속도는 \(String(format: "%.2f",accelMagnitude)) 입니다"
             
+            //            guard let gyroData = self.motionManager.gyroData else {return }
+            //            gyroData.rotationRate.x
             //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
             if accelMagnitude > 1.5 {
                 self.currentLoc = self.locationManager.location
@@ -199,11 +193,25 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                         print("Document added with ID: \(ref!.documentID)")
                     }
                 }
-
+                
                 sleep(1)
             }
-            guard let gyroData = self.motionManager.gyroData else {return }
-            gyroData.rotationRate.x
+            
+            
+            
+            //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
+            //만약 위험 좌표와 거리가 20m 안쪽이고, 그 물체에 직진(헤딩) 중이면 알림주기
+            //    20 km/h -> 5.6m/s      20m 전에 미리 알림 줘야함
+            for i in 0..<riskLocationCoordinates.count {
+                //
+                let lastTwoRecordedLocationOfUser = self.userLocationRecord.suffix(2)
+                let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
+                let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
+                if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)>0.1  {
+                    print("경고! 전방에 위험요소가 있습니다")
+                }
+            }
+            
         }
     }
     
@@ -215,34 +223,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    
-    @IBAction func locationSegment(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
-            // "현재 위치" 선택 - 현재 위치 표시
-            self.locationInfo1.text = ""
-            self.locationInfo2.text = ""
-            locationManager.startUpdatingLocation()
-        } else if sender.selectedSegmentIndex == 1 {
-            // "물왕저수지 정통밥집" 선택 - 핀을 설치하고 위치 정보 표시
-            setAnnotation(latitudeValue: 37.5051, longitudeValue: 126.9571, delta: 0.1, title: "중앙대학교", subtitle: "서울특별시 동작구 흑석동")
-            self.locationInfo1.text = "보고 계신 위치"
-            self.locationInfo2.text = "중앙대학교"
-        } else if sender.selectedSegmentIndex == 2 {
-            // "이디야 북한산점" 선택 - 핀을 설치하고 위치 정보 표시
-            setAnnotation(latitudeValue: 37.3219, longitudeValue: 126.8308, delta: 0.1, title: "안산시청", subtitle: "안산시 단원구")
-            self.locationInfo1.text = "보고 계신 위치"
-            self.locationInfo2.text = "안산시청"
-        }
-        
-    }
-    
-    
-    
-    
-    //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
-    
-    
-    
+   
     
 }
 
