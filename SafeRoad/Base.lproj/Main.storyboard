@@ -30,6 +30,20 @@
                                     <action selector="locationSegment:" destination="UCB-hs-Z51" eventType="valueChanged" id="Cvg-mC-86d"/>
                                 </connections>
                             </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="가속도 값" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B97-w4-uJR">
+                                <rect key="frame" x="87" y="502" width="64" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="현재위치" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
+                                <rect key="frame" x="315" y="212" width="59" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -48,45 +62,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ofv-ZK-eNy">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="710"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="현재위치" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
-                                <rect key="frame" x="10" y="720" width="59" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="주소 정보" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
+                                <rect key="frame" x="16" y="698" width="181" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="주소 정보" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
-                                <rect key="frame" x="10" y="751" width="64" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="가속도 값" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQd-DT-ahG">
-                                <rect key="frame" x="316" y="720" width="64" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZGl-Sh-Ff6">
+                                <rect key="frame" x="174" y="776" width="44" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="play" catalog="system"/>
+                                <connections>
+                                    <action selector="btnRec:" destination="UCB-hs-Z51" eventType="touchUpInside" id="pYU-CR-6Hi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="bRZ-7p-q2d" firstAttribute="leading" secondItem="icb-2I-b9z" secondAttribute="leading" id="7At-9a-y5T"/>
-                            <constraint firstItem="icb-2I-b9z" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="DXZ-Mt-0oR"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="FTU-yo-9NS" secondAttribute="top" id="HdH-ma-9Jg"/>
-                            <constraint firstItem="ZQd-DT-ahG" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" constant="-10" id="JOh-am-0YL"/>
-                            <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="100" id="Kgm-iI-Uho"/>
-                            <constraint firstItem="icb-2I-b9z" firstAttribute="leading" secondItem="ofv-ZK-eNy" secondAttribute="leading" constant="10" id="ThP-xu-oV5"/>
+                            <constraint firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" id="Kgm-iI-Uho"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
-                            <constraint firstItem="ZQd-DT-ahG" firstAttribute="top" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="10" id="oBs-mh-KKS"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
-                            <constraint firstItem="bRZ-7p-q2d" firstAttribute="top" secondItem="icb-2I-b9z" secondAttribute="bottom" constant="10" id="vx0-dy-BFn"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="accelLabel" destination="ZQd-DT-ahG" id="mBG-v9-htA"/>
+                        <outlet property="btnRec" destination="ZGl-Sh-Ff6" id="erU-W7-oXd"/>
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
@@ -94,10 +100,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ldn-Bb-MrO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="866" y="10"/>
+            <point key="canvasLocation" x="864.61538461538464" y="9.9526066350710902"/>
         </scene>
     </scenes>
     <resources>
+        <image name="play" catalog="system" width="117" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

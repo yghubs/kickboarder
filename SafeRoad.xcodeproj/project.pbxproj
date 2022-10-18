@@ -15,13 +15,13 @@
 		7321769128F9868100581DA6 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769028F9868100581DA6 /* FirebaseFirestoreSwift */; };
 		7321769328F9868100581DA6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769228F9868100581DA6 /* FirebaseStorage */; };
 		7321769528F9868100581DA6 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769428F9868100581DA6 /* FirebaseStorageCombine-Community */; };
-		7321769728F9912A00581DA6 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7321769628F9912A00581DA6 /* ChartViewController.swift */; };
 		735E708028EE92750076820E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E707F28EE92750076820E /* AppDelegate.swift */; };
 		735E708228EE92750076820E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E708128EE92750076820E /* SceneDelegate.swift */; };
 		735E708428EE92750076820E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E708328EE92750076820E /* ViewController.swift */; };
 		735E708728EE92750076820E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735E708528EE92750076820E /* Main.storyboard */; };
 		735E708928EE92770076820E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 735E708828EE92770076820E /* Assets.xcassets */; };
 		735E708C28EE92770076820E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735E708A28EE92770076820E /* LaunchScreen.storyboard */; };
+		73665DD428FE746A0017ECA4 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73665DD328FE746A0017ECA4 /* HapticsManager.swift */; };
 		73C202CA28F662C000141F15 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C202C928F662C000141F15 /* CoreLocation.framework */; };
 		73C202CE28F679AB00141F15 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C202CD28F679AB00141F15 /* Marker.swift */; };
 		73DF07C928EED807007026FA /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DF07C828EED807007026FA /* MapViewController.swift */; };
@@ -29,7 +29,6 @@
 
 /* Begin PBXFileReference section */
 		7321768528F9838B00581DA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7321769628F9912A00581DA6 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		735E707C28EE92750076820E /* SafeRoad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SafeRoad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		735E707F28EE92750076820E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		735E708128EE92750076820E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,6 +37,7 @@
 		735E708828EE92770076820E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		735E708B28EE92770076820E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		735E708D28EE92770076820E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73665DD328FE746A0017ECA4 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		73C202C928F662C000141F15 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		73C202CD28F679AB00141F15 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		73DF07C828EED807007026FA /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -87,12 +87,12 @@
 				73DF07C828EED807007026FA /* MapViewController.swift */,
 				735E708328EE92750076820E /* ViewController.swift */,
 				73C202CD28F679AB00141F15 /* Marker.swift */,
+				73665DD328FE746A0017ECA4 /* HapticsManager.swift */,
 				735E708528EE92750076820E /* Main.storyboard */,
 				735E708828EE92770076820E /* Assets.xcassets */,
 				735E708A28EE92770076820E /* LaunchScreen.storyboard */,
 				735E708D28EE92770076820E /* Info.plist */,
 				7321768528F9838B00581DA6 /* GoogleService-Info.plist */,
-				7321769628F9912A00581DA6 /* ChartViewController.swift */,
 			);
 			path = SafeRoad;
 			sourceTree = "<group>";
@@ -191,10 +191,10 @@
 			files = (
 				735E708428EE92750076820E /* ViewController.swift in Sources */,
 				735E708028EE92750076820E /* AppDelegate.swift in Sources */,
+				73665DD428FE746A0017ECA4 /* HapticsManager.swift in Sources */,
 				735E708228EE92750076820E /* SceneDelegate.swift in Sources */,
 				73DF07C928EED807007026FA /* MapViewController.swift in Sources */,
 				73C202CE28F679AB00141F15 /* Marker.swift in Sources */,
-				7321769728F9912A00581DA6 /* ChartViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
