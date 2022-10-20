@@ -18,13 +18,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
     var bRec:Bool = true
+    @IBOutlet weak var statementLabel: UILabel!
     @IBOutlet weak var btnRec: UIButton!
     @IBAction func btnRec(_ sender: Any) {
         bRec = !bRec
         if bRec {
-            btnRec.setImage(UIImage(systemName: "play"), for: .normal)
+            btnRec.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            statementLabel.text = "탐지가 중단 되었습니다"
         } else {
-            btnRec.setImage(UIImage(systemName: "pause"), for: .normal)
+            btnRec.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            statementLabel.text = "위험지역을 탐지 중입니다"
         }
     }
     
@@ -57,7 +60,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
         //MARK: accelerometer & gyroscope Data
         //        motionManager.startGyroUpdates()
-        
+        statementLabel.bringSubviewToFront(statementLabel)
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
         db = Firestore.firestore()
