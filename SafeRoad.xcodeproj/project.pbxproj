@@ -15,9 +15,9 @@
 		7321769128F9868100581DA6 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769028F9868100581DA6 /* FirebaseFirestoreSwift */; };
 		7321769328F9868100581DA6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769228F9868100581DA6 /* FirebaseStorage */; };
 		7321769528F9868100581DA6 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 7321769428F9868100581DA6 /* FirebaseStorageCombine-Community */; };
+		7333339329052B2B0033441B /* RouteFindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7333339229052B2B0033441B /* RouteFindViewController.swift */; };
 		735E708028EE92750076820E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E707F28EE92750076820E /* AppDelegate.swift */; };
 		735E708228EE92750076820E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E708128EE92750076820E /* SceneDelegate.swift */; };
-		735E708428EE92750076820E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735E708328EE92750076820E /* ViewController.swift */; };
 		735E708728EE92750076820E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735E708528EE92750076820E /* Main.storyboard */; };
 		735E708928EE92770076820E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 735E708828EE92770076820E /* Assets.xcassets */; };
 		735E708C28EE92770076820E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735E708A28EE92770076820E /* LaunchScreen.storyboard */; };
@@ -30,10 +30,10 @@
 
 /* Begin PBXFileReference section */
 		7321768528F9838B00581DA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7333339229052B2B0033441B /* RouteFindViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteFindViewController.swift; sourceTree = "<group>"; };
 		735E707C28EE92750076820E /* SafeRoad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SafeRoad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		735E707F28EE92750076820E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		735E708128EE92750076820E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		735E708328EE92750076820E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		735E708628EE92750076820E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		735E708828EE92770076820E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		735E708B28EE92770076820E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -68,6 +68,11 @@
 			isa = PBXGroup;
 			children = (
 				735E707E28EE92750076820E /* SafeRoad */,
+				7386991F2903FD90004722D9 /* Helpers */,
+				738699222903FDBF004722D9 /* View Controllers */,
+				738699212903FDB4004722D9 /* Views */,
+				738699202903FDAF004722D9 /* Models */,
+				7386991E2903FD87004722D9 /* Storyboards */,
 				735E707D28EE92750076820E /* Products */,
 				73C202C828F662C000141F15 /* Frameworks */,
 			);
@@ -86,18 +91,53 @@
 			children = (
 				735E707F28EE92750076820E /* AppDelegate.swift */,
 				735E708128EE92750076820E /* SceneDelegate.swift */,
-				73DF07C828EED807007026FA /* MapViewController.swift */,
-				735E708328EE92750076820E /* ViewController.swift */,
-				73C202CD28F679AB00141F15 /* Marker.swift */,
-				73665DD328FE746A0017ECA4 /* HapticsManager.swift */,
-				73709EF9290113B40008F39D /* CustomTabBar.swift */,
-				735E708528EE92750076820E /* Main.storyboard */,
 				735E708828EE92770076820E /* Assets.xcassets */,
-				735E708A28EE92770076820E /* LaunchScreen.storyboard */,
 				735E708D28EE92770076820E /* Info.plist */,
 				7321768528F9838B00581DA6 /* GoogleService-Info.plist */,
 			);
 			path = SafeRoad;
+			sourceTree = "<group>";
+		};
+		7386991E2903FD87004722D9 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				735E708A28EE92770076820E /* LaunchScreen.storyboard */,
+				735E708528EE92750076820E /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		7386991F2903FD90004722D9 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				73665DD328FE746A0017ECA4 /* HapticsManager.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		738699202903FDAF004722D9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				73C202CD28F679AB00141F15 /* Marker.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		738699212903FDB4004722D9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				73709EF9290113B40008F39D /* CustomTabBar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		738699222903FDBF004722D9 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				73DF07C828EED807007026FA /* MapViewController.swift */,
+				7333339229052B2B0033441B /* RouteFindViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		73C202C828F662C000141F15 /* Frameworks */ = {
@@ -192,12 +232,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				735E708428EE92750076820E /* ViewController.swift in Sources */,
 				735E708028EE92750076820E /* AppDelegate.swift in Sources */,
 				73709EFA290113B40008F39D /* CustomTabBar.swift in Sources */,
 				73665DD428FE746A0017ECA4 /* HapticsManager.swift in Sources */,
 				735E708228EE92750076820E /* SceneDelegate.swift in Sources */,
 				73DF07C928EED807007026FA /* MapViewController.swift in Sources */,
+				7333339329052B2B0033441B /* RouteFindViewController.swift in Sources */,
 				73C202CE28F679AB00141F15 /* Marker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

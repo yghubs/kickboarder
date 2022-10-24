@@ -12,34 +12,18 @@ class CustomTabBarvc: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        self.selectedIndex = 1
+        self.selectedIndex = 0
         self.setupTabBarUI()
         self.addCustomTabBarView()
-        setupMiddleButton()
     }
     
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.tabBar.itemPositioning = .centered
-            self.tabBar.itemSpacing = UIScreen.main.bounds.width / 6
         
     }
     
-    func setupMiddleButton() {
-        let middleButton = UIButton(frame: CGRect(x: (self.view.bounds.width / 2) - 25, y: -20, width: 60, height: 60))
-        
-        middleButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-        middleButton.layer.shadowColor = UIColor.black.cgColor
-        middleButton.layer.shadowOpacity = 0.1
-        middleButton.layer.shadowOffset = CGSize(width: 4, height: 4)
-        
-        self.tabBar.addSubview(middleButton)
-        middleButton.addTarget(self, action: #selector(menuButtonAction), for: .touchUpInside)
-        
-        self.view.layoutIfNeeded()
-    }
-    
+//
     private func addCustomTabBarView() {
         self.customTabBarView.frame = tabBar.frame
         self.tabBar.backgroundColor = .white
@@ -82,9 +66,5 @@ class CustomTabBarvc: UITabBarController, UITabBarControllerDelegate {
         itemAppearance.normal.badgePositionAdjustment = UIOffset(horizontal: 10, vertical: -10)
     }
     
-    
-    @objc func menuButtonAction(sender: UIButton) {
-        self.selectedIndex = 1
-    }
     
 }

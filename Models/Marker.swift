@@ -9,14 +9,14 @@ import Foundation
 import MapKit
 
 class Marker: NSObject, MKAnnotation {
+    
   let coordinate: CLLocationCoordinate2D
-
+    
   init(
     coordinate: CLLocationCoordinate2D
   ) {
       
     self.coordinate = coordinate
-
     super.init()
   }
 

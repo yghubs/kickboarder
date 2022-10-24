@@ -8,6 +8,7 @@
 import UIKit
 
 final class HapticsManager {
+    
     static let shared = HapticsManager()
     
     private init() {
@@ -19,7 +20,6 @@ final class HapticsManager {
             let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
             selectionFeedbackGenerator.prepare()
             selectionFeedbackGenerator.selectionChanged()
-        
         }
     }
     
