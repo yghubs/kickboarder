@@ -17,7 +17,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
     
-    
     @IBOutlet weak var playBtn: UIButton!
 
     @IBAction func playStateBtnDidTap(_ sender: Any) {
