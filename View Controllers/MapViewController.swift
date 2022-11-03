@@ -18,15 +18,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var db: Firestore!
     
     @IBOutlet weak var playBtn: UIButton!
-
+    
     @IBAction func playStateBtnDidTap(_ sender: Any) {
         playState = !playState
-            if playState {
-                playBtn.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-            } else {
-                playBtn.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-            }
+        if playState {
+            playBtn.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+        } else {
+            playBtn.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
         }
+    }
+    
     
     
     @IBOutlet weak var myMap: MKMapView!
@@ -37,6 +38,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     let database = Firestore.firestore()
     let haptic = HapticsManager.shared
     var currentLoc: CLLocation!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,9 +52,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         // 위치 보기 설정
         myMap.showsUserLocation = true
-        
+        myMap.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         db = Firestore.firestore()
-
         
         //MARK: accelerometer & gyroscope Data
         motionManager.startAccelerometerUpdates()
@@ -60,7 +61,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         riskLocationData()
         
     }
-
+    
+    
+    
     func riskLocationData() {
         db.collection("saferoad").getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -83,9 +86,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                     longtudeValue: CLLocationDegrees,
                     delta span: Double) -> CLLocationCoordinate2D {
         let pLocation = CLLocationCoordinate2DMake(latitudeValue, longtudeValue)
-        let spanValue = MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span)
-        let pRegion = MKCoordinateRegion(center: pLocation, span: spanValue)
-        myMap.setRegion(pRegion, animated: true)
+        //        let spanValue = MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span)
+        //        let pRegion = MKCoordinateRegion(center: pLocation, span: spanValue)
         return pLocation
     }
     
@@ -107,8 +109,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+       
         
         if playState == true {
+            
+            myMap.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+            
             let pLocation = locations.last
             userLocationRecord.append(pLocation!)
             print(userLocationRecord.count)
@@ -145,7 +151,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                     let liveLatitude = Double(self.currentLoc.coordinate.latitude)
                     let liveLongitude = Double(self.currentLoc.coordinate.longitude)
                     self.setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!)
-                    self.haptic.vibrate(for: .warning)
+                    self.haptic.vibrate(for: .success)
                     var ref: DocumentReference? = nil
                     ref = self.db.collection("saferoad").addDocument(data: [
                         "latitude" : liveLatitude,
@@ -167,7 +173,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                     let lastTwoRecordedLocationOfUser = self.userLocationRecord.suffix(2)
                     let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
                     let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
-                    if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 0.1 {
+                    if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
                         self.haptic.vibrate(for: .warning)
                     }
                 }
