@@ -6,67 +6,63 @@
 //
 
 import UIKit
+import CoreMotion
 import MapKit
-
-
+import FirebaseFirestore
 
 class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
-
+    
+    let mapVC = MapViewController.shared
     let locationManager = CLLocationManager()
     var destinationCoordinate = CLLocationCoordinate2D()
-   
+    var db: Firestore!
+    
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let sourceLocation = CLLocationCoordinate2D(latitude: 37.3219, longitude: 126.8308)
-        
-//        createPath(sourceLocation: sourceLocation, destinationLocation: destinationLocation)
-//
+        //        createPath(sourceLocation: sourceLocation, destinationLocation: destinationLocation)
         locationManager.startUpdatingLocation()
-        
-//        = CLLocation(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
+        //        = CLLocation(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
         // 위치 보기 설정
         mapView.showsUserLocation = true
+        mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        db = Firestore.firestore()
         self.mapView.delegate = self
         self.initView()
+        
         
     }
     
     @IBAction func findBtnDidTap(_ sender: Any) {
         var userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
-
+        
         createPath(sourceLocation: userCurrentCoordinate, destinationLocation: destinationCoordinate)
         
     }
-    
-    
     
     private func initView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTappedMapView(_:)))
         self.mapView.addGestureRecognizer(tap)
     }
     
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        guard locations.last != nil else {return }
-//        let startLocationCoordinates = CLLocationCoordinate2D(latitude: (locations.last?.coordinate.latitude)!, longitude: (locations.last?.coordinate.longitude)!)
-//    }
+    //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    //        guard locations.last != nil else {return }
+    //        let startLocationCoordinates = CLLocationCoordinate2D(latitude: (locations.last?.coordinate.latitude)!, longitude: (locations.last?.coordinate.longitude)!)
+    //    }
     
     
     func createPath(sourceLocation : CLLocationCoordinate2D, destinationLocation : CLLocationCoordinate2D) {
         
-        
         let sourcePlaceMark = MKPlacemark(coordinate: sourceLocation, addressDictionary: nil)
         let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation, addressDictionary: nil)
-        
         
         let sourceMapItem = MKMapItem(placemark: sourcePlaceMark)
         let destinationItem = MKMapItem(placemark: destinationPlaceMark)
         
         
         let sourceAnotation = MKPointAnnotation()
-       
+        sourceAnotation.title = "start"
         if let location = sourcePlaceMark.location {
             sourceAnotation.coordinate = location.coordinate
         }
@@ -99,10 +95,10 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             let rect = route.polyline.boundingMapRect
             
             self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
-            
+            riskLocationData(database: self.db, mapToPin: self.mapView)
         }
     }
-
+    
 }
 
 extension RouteFindViewController  {
@@ -116,15 +112,16 @@ extension RouteFindViewController  {
         removeAllAnnotations()
         let destinationAnnotation = MKPointAnnotation()
         destinationAnnotation.coordinate = mapPoint
+        destinationAnnotation.title = "destination"
         self.mapView.addAnnotation(destinationAnnotation)
         
         destinationCoordinate = mapPoint
         print(destinationCoordinate)
         
-
-//        if sender.state == .ended {
-//            self.searchLocation(mapPoint)
-//        }
+        
+        //        if sender.state == .ended {
+        //            self.searchLocation(mapPoint)
+        //        }
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -140,7 +137,72 @@ extension RouteFindViewController  {
         self.mapView.removeAnnotations(allAnnotations)
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "custom")
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "custom")
+        } else {
+            annotationView?.annotation = annotation
+            
+        }
+        
+        switch annotation.title {
+        case "destination":
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            annotationView?.image = UIImage(systemName: "mappin.and.ellipse", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.systemGreen)
+            
+            
+            
+        case "start":
+            let image = UIImage(named: "startPin")?.withRenderingMode(.alwaysTemplate)
+            let resizedImage = image?.resized(to: CGSize(width: 50, height: 50))
+            annotationView?.image = resizedImage
+            
+            
+            
+            
+            
+            
+            
+        default:
+            break
+        }
+        
+        return annotationView
+    }
     
     
     
 }
+
+extension UIImage {
+    func imageWithColor(color1: UIColor) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        color1.setFill()
+        
+        let context = UIGraphicsGetCurrentContext()
+        context?.translateBy(x: 0, y: self.size.height)
+        context?.scaleBy(x: 1.0, y: -1.0)
+        context?.setBlendMode(CGBlendMode.normal)
+        
+        let rect = CGRect(origin: .zero, size: CGSize(width: self.size.width, height: self.size.height))
+        context?.clip(to: rect, mask: self.cgImage!)
+        context?.fill(rect)
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
+    
+    func resized(to size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+}
+

@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import MapKit
 import CoreMotion
+import MapKit
 import FirebaseFirestore
 
 var riskLocationCoordinates = [CLLocation]()
@@ -15,6 +15,7 @@ var playState:Bool = false
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
+    static let shared = MapViewController()
     var db: Firestore!
     
     @IBOutlet weak var playBtn: UIButton!
@@ -58,51 +59,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         //MARK: accelerometer & gyroscope Data
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
-        riskLocationData()
+        riskLocationData(database: db, mapToPin: myMap)
         
     }
     
     
     
-    func riskLocationData() {
-        db.collection("saferoad").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    let latitudes = String(describing: document.get("latitude")!)
-                    let longitudes = String(describing: document.get("longitude")!)
-                    let doubleLatitudes = Double(latitudes)
-                    let doubleLongitudes = Double(longitudes)
-                    self.setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "", subtitle: "")
-                    riskLocationCoordinates.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
-                }
-            }
-        }
-    }
     
-    // 위도와 경도, 스팬(영역 폭)을 입력받아 지도에 표시
-    func goLocation(latitudeValue: CLLocationDegrees,
-                    longtudeValue: CLLocationDegrees,
-                    delta span: Double) -> CLLocationCoordinate2D {
-        let pLocation = CLLocationCoordinate2DMake(latitudeValue, longtudeValue)
-        //        let spanValue = MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span)
-        //        let pRegion = MKCoordinateRegion(center: pLocation, span: spanValue)
-        return pLocation
-    }
-    
-    // 특정 위도와 경도에 핀 설치하고 핀에 타이틀과 서브 타이틀의 문자열 표시
-    func setAnnotation(latitudeValue: CLLocationDegrees,
-                       longitudeValue: CLLocationDegrees,
-                       delta span :Double,
-                       title strTitle: String,
-                       subtitle strSubTitle:String){
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = goLocation(latitudeValue: latitudeValue, longtudeValue: longitudeValue, delta: span)
-        annotation.title = strTitle
-        annotation.subtitle = strSubTitle
-        myMap.addAnnotation(annotation)
-    }
+  
     
     var userLocationRecord = [CLLocation]()
     
@@ -146,11 +110,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
                 
                 //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 1.5 {
+                if accelMagnitude > 1 {
                     self.currentLoc = self.locationManager.location
                     let liveLatitude = Double(self.currentLoc.coordinate.latitude)
                     let liveLongitude = Double(self.currentLoc.coordinate.longitude)
-                    self.setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!)
+                    setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!, map: self.myMap)
                     self.haptic.vibrate(for: .success)
                     var ref: DocumentReference? = nil
                     ref = self.db.collection("saferoad").addDocument(data: [
