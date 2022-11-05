@@ -11,21 +11,25 @@ import MapKit
 import FirebaseFirestore
 
 var riskLocationCoordinates = [CLLocation]()
-var playState:Bool = false
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
-    static let shared = MapViewController()
     var db: Firestore!
+    var playState: Bool = false
     
+    @IBOutlet weak var mapGuideLabel: UILabel!
     @IBOutlet weak var playBtn: UIButton!
     
     @IBAction func playStateBtnDidTap(_ sender: Any) {
         playState = !playState
         if playState {
-            playBtn.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            playBtn.setImage(UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfiguration)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            mapGuideLabel.text = "정지버튼을 누르면 탐지가 종료됩니다"
+            
         } else {
-            playBtn.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            playBtn.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: largeConfiguration)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            mapGuideLabel.text = "재생 버튼을 누르면 탐지가 실행됩니다"
+            
         }
     }
     
@@ -63,17 +67,22 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated) // No need for semicolon
+        mapGuideLabel.blink()
+
+    }
     
     
     
-  
+    
     
     var userLocationRecord = [CLLocation]()
     
     // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-       
+        
         
         if playState == true {
             
@@ -110,7 +119,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
                 
                 //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 1 {
+                if accelMagnitude > 3 {
                     self.currentLoc = self.locationManager.location
                     let liveLatitude = Double(self.currentLoc.coordinate.latitude)
                     let liveLongitude = Double(self.currentLoc.coordinate.longitude)

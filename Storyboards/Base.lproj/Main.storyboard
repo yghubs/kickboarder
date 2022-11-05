@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -44,29 +45,29 @@
                                     <outletCollection property="gestureRecognizers" destination="sE6-Il-lqw" appends="YES" id="lQ7-Xm-rDY"/>
                                 </connections>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="목적지를 클릭하세요" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Psv-8D-wri">
-                                <rect key="frame" x="99" y="67" width="192" height="28.666666666666671"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="목적지를 지도에서 탭하세요" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Psv-8D-wri">
+                                <rect key="frame" x="30" y="67" width="330" height="29"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="He3-LH-C2b">
-                                <rect key="frame" x="135" y="678" width="120" height="50"/>
+                                <rect key="frame" x="145" y="678" width="100" height="45"/>
                                 <color key="backgroundColor" systemColor="tintColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="bjF-dB-QXB"/>
-                                    <constraint firstAttribute="height" constant="50" id="yFJ-G2-X8e"/>
+                                    <constraint firstAttribute="width" constant="100" id="bjF-dB-QXB"/>
+                                    <constraint firstAttribute="height" constant="45" id="yFJ-G2-X8e"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="tintColor"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="scooter" catalog="system" title="시작" imagePadding="15">
-                                    <fontDescription key="titleFontDescription" name=".AppleSDGothicNeoI-Regular" family=".Apple SD Gothic NeoI" pointSize="22"/>
+                                <buttonConfiguration key="configuration" style="plain" image="scooter" catalog="system" title="시작" imagePadding="5">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
                                     <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBound" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="25"/>
+                                        <integer key="value" value="20"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -77,8 +78,10 @@
                         <viewLayoutGuide key="safeArea" id="tYM-wW-gb0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="tYM-wW-gb0" firstAttribute="trailing" secondItem="Psv-8D-wri" secondAttribute="trailing" constant="30" id="0Zx-ST-mdE"/>
                             <constraint firstItem="H4S-di-ysv" firstAttribute="trailing" secondItem="tYM-wW-gb0" secondAttribute="trailing" id="3oG-ZV-BaZ"/>
                             <constraint firstItem="He3-LH-C2b" firstAttribute="top" secondItem="H4S-di-ysv" secondAttribute="bottom" constant="-146" id="4Fh-tO-MAQ"/>
+                            <constraint firstItem="Psv-8D-wri" firstAttribute="leading" secondItem="tYM-wW-gb0" secondAttribute="leading" constant="30" id="6VL-Eh-3tS"/>
                             <constraint firstItem="Psv-8D-wri" firstAttribute="top" secondItem="tYM-wW-gb0" secondAttribute="top" constant="20" id="Aac-8m-syo"/>
                             <constraint firstItem="H4S-di-ysv" firstAttribute="top" secondItem="DLJ-Ss-4J5" secondAttribute="top" id="KPi-us-e5u"/>
                             <constraint firstItem="He3-LH-C2b" firstAttribute="centerX" secondItem="H4S-di-ysv" secondAttribute="centerX" id="XDO-Mz-Z3I"/>
@@ -91,7 +94,9 @@
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="guideLabel" destination="Psv-8D-wri" id="nlN-ya-G0I"/>
                         <outlet property="mapView" destination="H4S-di-ysv" id="7ba-CU-5NE"/>
+                        <outlet property="routeFindPlayBtn" destination="He3-LH-C2b" id="649-tz-HNc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="65v-Al-QfJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -163,23 +168,34 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqD-GN-Rwn" userLabel="playBtn">
                                 <rect key="frame" x="158" y="679.33333333333337" width="75" height="61.666666666666629"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="play.circle.fill" catalog="system">
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="play.circle.fill" catalog="system" renderingMode="original"/>
                                     <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="40"/>
+                                    <color key="baseForegroundColor" systemColor="tintColor"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="playStateBtnDidTap:" destination="UCB-hs-Z51" eventType="touchUpInside" id="id1-jY-gZq"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="재생 버튼을 누르면 탐지가 실행됩니다" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VQz-Vr-eK9">
+                                <rect key="frame" x="20" y="72" width="350" height="27.666666666666671"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="VQz-Vr-eK9" secondAttribute="trailing" constant="20" id="6me-F3-pKo"/>
                             <constraint firstItem="bRZ-7p-q2d" firstAttribute="centerX" secondItem="ofv-ZK-eNy" secondAttribute="centerX" id="7rh-Xd-CCK"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="-30" id="9ei-Hj-7cA"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="FTU-yo-9NS" secondAttribute="top" id="HdH-ma-9Jg"/>
                             <constraint firstItem="pqD-GN-Rwn" firstAttribute="top" secondItem="bRZ-7p-q2d" secondAttribute="bottom" constant="20" id="LPY-Ek-c11"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
                             <constraint firstItem="pqD-GN-Rwn" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="158" id="f49-4w-Kbe"/>
+                            <constraint firstItem="VQz-Vr-eK9" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="20" id="g6V-8N-yH0"/>
+                            <constraint firstItem="VQz-Vr-eK9" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="25" id="muI-bq-57a"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="pqD-GN-Rwn" secondAttribute="trailing" constant="157" id="nUO-E7-HLO"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="pqD-GN-Rwn" secondAttribute="bottom" constant="20" id="sOW-8x-AFD"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="ofv-ZK-eNy" secondAttribute="trailing" id="uqM-dc-jQW"/>
@@ -192,6 +208,7 @@
                     <connections>
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
+                        <outlet property="mapGuideLabel" destination="VQz-Vr-eK9" id="v4R-YC-EkO"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
                         <outlet property="playBtn" destination="pqD-GN-Rwn" id="uHS-FS-AYG"/>
                     </connections>

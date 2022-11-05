@@ -10,40 +10,66 @@ import CoreMotion
 import MapKit
 import FirebaseFirestore
 
+
 class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
-    let mapVC = MapViewController.shared
     let locationManager = CLLocationManager()
     var destinationCoordinate = CLLocationCoordinate2D()
-    var db: Firestore!
+    var dbInRouteFind: Firestore!
+    var routeFindPlayState: Bool = false
+
+    
+    @IBOutlet weak var guideLabel: UILabel!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var routeFindPlayBtn: UIButton!
+    @IBAction func findBtnDidTap(_ sender: Any) {
+        
+        var userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
+
+        routeFindPlayState = !routeFindPlayState
+        
+        if routeFindPlayState {
+            routeFindPlayBtn.setImage(UIImage(systemName: "pause", withConfiguration: mediumConfiguration)?.withRenderingMode(.alwaysTemplate), for: .normal)
+            routeFindPlayBtn.setTitle("", for: .normal)
+            createPath(sourceLocation: userCurrentCoordinate, destinationLocation: destinationCoordinate)
+            
+        } else {
+//            let largeConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
+            routeFindPlayBtn.backgroundColor = .systemBlue
+            routeFindPlayBtn.setTitle("시작", for: .normal)
+            routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
+            routeFindPlayBtn.tintColor = .white
+            removeAllAnnotations()
+            removeAllOverlays()
+            guideLabel.text = "목적지를 지도에서 탭하세요"
+            
+        }
+      }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        createPath(sourceLocation: sourceLocation, destinationLocation: destinationLocation)
+        self.mapView.delegate = self
         locationManager.startUpdatingLocation()
-        //        = CLLocation(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
-        // 위치 보기 설정
         mapView.showsUserLocation = true
         mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        db = Firestore.firestore()
-        self.mapView.delegate = self
+        dbInRouteFind = Firestore.firestore()
         self.initView()
-        
-        
     }
     
-    @IBAction func findBtnDidTap(_ sender: Any) {
-        var userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
-        
-        createPath(sourceLocation: userCurrentCoordinate, destinationLocation: destinationCoordinate)
-        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated) 
+        guideLabel.blink()
+
     }
+    
+    
     
     private func initView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTappedMapView(_:)))
         self.mapView.addGestureRecognizer(tap)
+       
+
     }
     
     //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -51,7 +77,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     //        let startLocationCoordinates = CLLocationCoordinate2D(latitude: (locations.last?.coordinate.latitude)!, longitude: (locations.last?.coordinate.longitude)!)
     //    }
     
-    
+
     func createPath(sourceLocation : CLLocationCoordinate2D, destinationLocation : CLLocationCoordinate2D) {
         
         let sourcePlaceMark = MKPlacemark(coordinate: sourceLocation, addressDictionary: nil)
@@ -63,6 +89,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         
         let sourceAnotation = MKPointAnnotation()
         sourceAnotation.title = "start"
+        self.mapView.addAnnotation(sourceAnotation)
         if let location = sourcePlaceMark.location {
             sourceAnotation.coordinate = location.coordinate
         }
@@ -72,7 +99,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             destinationAnotation.coordinate = location.coordinate
         }
         
-        self.mapView.showAnnotations([sourceAnotation, destinationAnotation], animated: true)
+//        self.mapView.showAnnotations([sourceAnotation, destinationAnotation], animated: true)
         
         let directionRequest = MKDirections.Request()
         directionRequest.source = sourceMapItem
@@ -90,15 +117,18 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             }
             
             let route = response.routes[0]
+            //            if routeFindP
             self.mapView.addOverlay(route.polyline, level: MKOverlayLevel.aboveRoads)
-            
-            let rect = route.polyline.boundingMapRect
-            
-            self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
-            riskLocationData(database: self.db, mapToPin: self.mapView)
+            //            let rect = route.polyline.boundingMapRect
+            //            self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
+            //            riskLocationData(database: self.db, mapToPin: self.mapView)
+
         }
+        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
+        
+
+
     }
-    
 }
 
 extension RouteFindViewController  {
@@ -110,13 +140,14 @@ extension RouteFindViewController  {
         let location: CGPoint = sender.location(in: self.mapView)
         let mapPoint: CLLocationCoordinate2D = self.mapView.convert(location, toCoordinateFrom: self.mapView)
         removeAllAnnotations()
+        guideLabel.text = ""
         let destinationAnnotation = MKPointAnnotation()
         destinationAnnotation.coordinate = mapPoint
         destinationAnnotation.title = "destination"
+        self.mapView.removeOverlays(self.mapView.overlays)
         self.mapView.addAnnotation(destinationAnnotation)
-        
+    
         destinationCoordinate = mapPoint
-        print(destinationCoordinate)
         
         
         //        if sender.state == .ended {
@@ -137,6 +168,11 @@ extension RouteFindViewController  {
         self.mapView.removeAnnotations(allAnnotations)
     }
     
+    private func removeAllOverlays() {
+        self.mapView.removeOverlays(self.mapView.overlays)
+
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
             return nil
@@ -155,54 +191,19 @@ extension RouteFindViewController  {
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
             annotationView?.image = UIImage(systemName: "mappin.and.ellipse", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.systemGreen)
             
-            
-            
         case "start":
-            let image = UIImage(named: "startPin")?.withRenderingMode(.alwaysTemplate)
-            let resizedImage = image?.resized(to: CGSize(width: 50, height: 50))
+            let image = UIImage(named: "startPin")
+            let resizedImage = image?.resized(to: CGSize(width: 29.04, height: 40.23))
             annotationView?.image = resizedImage
-            
-            
-            
-            
-            
-            
-            
+        
+        case "basic":
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
+            annotationView?.image = UIImage(systemName: "mappin.circle.fill", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.systemGreen)
+        
         default:
             break
         }
         
         return annotationView
     }
-    
-    
-    
 }
-
-extension UIImage {
-    func imageWithColor(color1: UIColor) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
-        color1.setFill()
-        
-        let context = UIGraphicsGetCurrentContext()
-        context?.translateBy(x: 0, y: self.size.height)
-        context?.scaleBy(x: 1.0, y: -1.0)
-        context?.setBlendMode(CGBlendMode.normal)
-        
-        let rect = CGRect(origin: .zero, size: CGSize(width: self.size.width, height: self.size.height))
-        context?.clip(to: rect, mask: self.cgImage!)
-        context?.fill(rect)
-        
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage!
-    }
-    
-    func resized(to size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(origin: .zero, size: size))
-        }
-    }
-}
-

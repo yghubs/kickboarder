@@ -10,6 +10,7 @@ import CoreLocation
 import MapKit
 import FirebaseFirestore
 
+
 // 위도와 경도, 스팬(영역 폭)을 입력받아 지도에 표시
 func goLocation(latitudeValue: CLLocationDegrees,
                 longtudeValue: CLLocationDegrees,
@@ -28,6 +29,7 @@ func setAnnotation(latitudeValue: CLLocationDegrees,
                    subtitle strSubTitle:String,
                    map: MKMapView){
     let annotation = MKPointAnnotation()
+    annotation.title = "basic"
     annotation.coordinate = goLocation(latitudeValue: latitudeValue, longtudeValue: longitudeValue, delta: span)
     annotation.title = strTitle
     annotation.subtitle = strSubTitle
