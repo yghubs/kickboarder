@@ -40,30 +40,37 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             routeFindPlayBtn.setTitle("시작", for: .normal)
             routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
             routeFindPlayBtn.tintColor = .white
-            removeAllAnnotations()
-            removeAllOverlays()
             guideLabel.text = "목적지를 지도에서 탭하세요"
+            removeAllOverlays()
+            removeAllAnnotations()
             
         }
       }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         self.mapView.delegate = self
+        dbInRouteFind = Firestore.firestore()
         locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
         mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        dbInRouteFind = Firestore.firestore()
         self.initView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated) 
+        super.viewWillAppear(animated)
         guideLabel.blink()
 
     }
     
-    
+//    func removeEverythingIfPlayStateIsFalse() {
+//        if routeFindPlayState == false {
+//            removeAllOverlays()
+//            removeAllAnnotations()
+//            guideLabel.text = "목적지를 지도에서 탭하세요"
+//        }
+//    }
     
     private func initView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTappedMapView(_:)))
@@ -124,15 +131,15 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             //            riskLocationData(database: self.db, mapToPin: self.mapView)
 
         }
-        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
+//        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
         
 
 
     }
 }
 
-extension RouteFindViewController  {
-    
+extension RouteFindViewController {
+
     //제스처 조작
     @objc
     private func didTappedMapView(_ sender: UITapGestureRecognizer) {
@@ -146,8 +153,13 @@ extension RouteFindViewController  {
         destinationAnnotation.title = "destination"
         self.mapView.removeOverlays(self.mapView.overlays)
         self.mapView.addAnnotation(destinationAnnotation)
-    
         destinationCoordinate = mapPoint
+        routeFindPlayState = false
+        routeFindPlayBtn.backgroundColor = .systemBlue
+        routeFindPlayBtn.setTitle("시작", for: .normal)
+        routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
+        routeFindPlayBtn.tintColor = .white
+
         
         
         //        if sender.state == .ended {
@@ -169,7 +181,8 @@ extension RouteFindViewController  {
     }
     
     private func removeAllOverlays() {
-        self.mapView.removeOverlays(self.mapView.overlays)
+        let allOverlays = self.mapView.overlays
+        self.mapView.removeOverlays(allOverlays)
 
     }
     
@@ -198,7 +211,7 @@ extension RouteFindViewController  {
         
         case "basic":
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-            annotationView?.image = UIImage(systemName: "mappin.circle.fill", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.systemGreen)
+            annotationView?.image = UIImage(systemName: "mappin.circle.fill", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.red)
         
         default:
             break
