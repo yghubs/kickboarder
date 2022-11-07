@@ -14,6 +14,10 @@ import FirebaseFirestore
 class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     let locationManager = CLLocationManager()
+    let motionManager = CMMotionManager()
+    let haptic = HapticsManager.shared
+    
+    var currentLoc: CLLocation!
     var destinationCoordinate = CLLocationCoordinate2D()
     var dbInRouteFind: Firestore!
     var routeFindPlayState: Bool = false
@@ -47,15 +51,19 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         }
       }
     
+    
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         self.mapView.delegate = self
         dbInRouteFind = Firestore.firestore()
+    
         locationManager.startUpdatingLocation()
         mapView.showsUserLocation = true
         mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         self.initView()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,6 +109,10 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             sourceAnotation.coordinate = location.coordinate
         }
         
+        //riskLocation 핀꽂기
+        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
+        
+        
         let destinationAnotation = MKPointAnnotation()
         if let location = destinationPlaceMark.location {
             destinationAnotation.coordinate = location.coordinate
@@ -132,7 +144,6 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
 
         }
 //        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
-        
 
 
     }
@@ -140,6 +151,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
 
 extension RouteFindViewController {
 
+    
     //제스처 조작
     @objc
     private func didTappedMapView(_ sender: UITapGestureRecognizer) {
@@ -210,8 +222,8 @@ extension RouteFindViewController {
             annotationView?.image = resizedImage
         
         case "basic":
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-            annotationView?.image = UIImage(systemName: "mappin.circle.fill", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.red)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold, scale: .medium)
+            annotationView?.image = UIImage(systemName: "mappin", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.red)
         
         default:
             break

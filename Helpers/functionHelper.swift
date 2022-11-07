@@ -46,7 +46,7 @@ func riskLocationData(database: Firestore!, mapToPin: MKMapView) {
                 let longitudes = String(describing: document.get("longitude")!)
                 let doubleLatitudes = Double(latitudes)
                 let doubleLongitudes = Double(longitudes)
-                setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "", subtitle: "", map: mapToPin)
+                setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "basic", subtitle: "", map: mapToPin)
                 riskLocationCoordinates.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
             }
         }
