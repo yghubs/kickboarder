@@ -73,6 +73,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        playState = false
+    }
+    
     
     
     
@@ -92,9 +97,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             userLocationRecord.append(pLocation!)
             print(userLocationRecord.count)
             if userLocationRecord.count > 10 {
-                for _ in 0...8{
-                    userLocationRecord.remove(at: 0)
-                }
+                userLocationRecord.removeAll()
+                
             }
             
             CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
@@ -143,12 +147,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 //만약 위험 좌표와 거리가 20m 안쪽이고, 그 물체에 직진(헤딩) 중이면 알림주기
                 //    20 km/h -> 5.6m/s      20m 전에 미리 알림 줘야함
                 for i in 0..<riskLocationCoordinates.count {
+                    
                     let lastTwoRecordedLocationOfUser = self.userLocationRecord.suffix(2)
-                    let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
-                    let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
-                    if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
-                        self.haptic.vibrate(for: .warning)
+                    
+                    if lastTwoRecordedLocationOfUser.first != nil {
+                        let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
+                        
+                        let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
+                        if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
+                            self.haptic.vibrate(for: .warning)
+                        }
                     }
+                    
                 }
                 
             }

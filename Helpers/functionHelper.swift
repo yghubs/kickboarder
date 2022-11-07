@@ -37,6 +37,7 @@ func setAnnotation(latitudeValue: CLLocationDegrees,
 }
 
 func riskLocationData(database: Firestore!, mapToPin: MKMapView) {
+    riskLocationCoordinates.removeAll()
     database.collection("saferoad").getDocuments() { (querySnapshot, err) in
         if let err = err {
             print("Error getting documents: \(err)")

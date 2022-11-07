@@ -58,18 +58,35 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         super.viewDidLoad()
         self.mapView.delegate = self
         dbInRouteFind = Firestore.firestore()
-    
+        locationManager.delegate = self
+        
+        // 정확도를 최고로 설정
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+       
+        // 위치 업데이트를 시작
         locationManager.startUpdatingLocation()
+        
         mapView.showsUserLocation = true
         mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        
+        motionManager.startAccelerometerUpdates()
+        motionManager.accelerometerUpdateInterval = 0.01
+        
         self.initView()
         
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guideLabel.blink()
 
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        routeFindPlayState = false
     }
     
 //    func removeEverythingIfPlayStateIsFalse() {
@@ -147,6 +164,9 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
 
 
     }
+    
+    var routeFindUserLocatioRecord = [CLLocation]()
+
 }
 
 extension RouteFindViewController {
@@ -231,4 +251,83 @@ extension RouteFindViewController {
         
         return annotationView
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        if routeFindPlayState == true {
+            
+            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+            
+            let pLocation = locations.last
+            routeFindUserLocatioRecord.append(pLocation!)
+            print(routeFindUserLocatioRecord.count)
+            if routeFindUserLocatioRecord.count > 10 {
+                routeFindUserLocatioRecord.removeAll()
+            }
+            
+//            CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
+//                let pm = placemarks?.first
+//                var address: String = ""
+//                if pm?.locality != nil {
+//                    address += " "
+//                    address += pm!.locality!
+//                }
+//                if pm?.thoroughfare != nil {
+//                    address += " "
+//                    address += pm!.thoroughfare!
+//                }
+//                self.locationInfo2.text = "현위치 \(address)"
+//            })
+            
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                guard let data = self.motionManager.accelerometerData else {return }
+                let x = data.acceleration.x
+                let y = data.acceleration.y
+                let z = data.acceleration.z
+                let accelMagnitude = sqrt(x*x + y*y + z*z)
+                
+                //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
+                if accelMagnitude > 3 {
+                    self.currentLoc = self.locationManager.location
+                    let liveLatitude = Double(self.currentLoc.coordinate.latitude)
+                    let liveLongitude = Double(self.currentLoc.coordinate.longitude)
+                    setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: "", map: self.mapView)
+                    self.haptic.vibrate(for: .success)
+                    var ref: DocumentReference? = nil
+                    ref = self.dbInRouteFind.collection("saferoad").addDocument(data: [
+                        "latitude" : liveLatitude,
+                        "longitude" : liveLongitude
+                    ]) { err in
+                        if let err = err {
+                            print("Error adding document: \(err)")
+                        } else {
+                            print("Document added with ID: \(ref!.documentID)")
+                        }
+                    }
+                    sleep(1)
+                }
+                
+                //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
+                //만약 위험 좌표와 거리가 20m 안쪽이고, 그 물체에 직진(헤딩) 중이면 알림주기
+                //    20 km/h -> 5.6m/s      20m 전에 미리 알림 줘야함
+                for i in 0..<riskLocationCoordinates.count {
+                    
+                    
+                    let lastTwoRecordedLocationOfUser = self.routeFindUserLocatioRecord.suffix(2)
+                    
+                    if lastTwoRecordedLocationOfUser.first != nil {
+                        let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
+                        
+                        let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
+                        if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
+                            self.haptic.vibrate(for: .warning)
+                        }
+                    }
+                    
+                }
+                
+            }
+        }
+    }
+    
 }
