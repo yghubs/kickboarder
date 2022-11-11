@@ -15,12 +15,16 @@ var riskLocationCoordinates = [CLLocation]()
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
-    
     var playState: Bool = false
     
     @IBOutlet weak var mapGuideLabel: UILabel!
+
+    @IBOutlet weak var myMap: MKMapView!
+    
     @IBOutlet weak var playBtn: UIButton!
     
+    @IBOutlet weak var locationInfo2: UILabel!
+
     @IBAction func playStateBtnDidTap(_ sender: Any) {
         playState = !playState
         if playState {
@@ -34,11 +38,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    
-    
-    @IBOutlet weak var myMap: MKMapView!
-    @IBOutlet weak var locationInfo2: UILabel!
-    
+
     let locationManager = CLLocationManager()
     let motionManager = CMMotionManager()
     let database = Firestore.firestore()
@@ -54,6 +54,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         // 위치 데이터를 추적하기 위해 사용자에게 승인 요구
         locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         guard let userLocation = locationManager.location?.coordinate else {return }
         myMap.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
@@ -73,9 +74,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
         riskLocationData(database: db, mapToPin: myMap)
-        downloadRiskLocation { isRiskLocationExist in
-            print(isRiskLocationExist)
-        }
+//        downloadRiskLocation { isRiskLocationExist in
+//            print(isRiskLocationExist)
+//        }
+       
+        
     }
     
     
@@ -136,25 +139,33 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 if accelMagnitude > 2 {
 //                    self.haptic.vibrate(for: .success)
                     UIDevice.vibrate()
-                    let digit: Double = pow(10, 3) // 10의 4제곱
+                    let digit: Double = pow(10, 5) // 10의 5제곱
                     self.currentLoc = self.locationManager.location
                     let liveLatitude = round(self.currentLoc.coordinate.latitude * digit) / digit
                     let liveLongitude = round(self.currentLoc.coordinate.longitude * digit) / digit
                     
-                    if checkRiskLocationAleadyExist(database: db, latitude: liveLatitude, longitude: liveLongitude) == false {
-                        setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!, map: self.myMap)
-                        var ref: DocumentReference? = nil
-                        ref = self.db.collection("saferoad").addDocument(data: [
-                            "latitude" : liveLatitude,
-                            "longitude" : liveLongitude
-                        ]) { err in
-                            if let err = err {
-                                print("Error adding document: \(err)")
-                            } else {
-                                print("Document added with ID: \(ref!.documentID)")
-                            }
+                    //MARK: 해당 좌표가 서버에 존재하면 좌표 추가안함
+                    checkRiskLocationExist(latitude: liveLatitude, longitude: liveLongitude) { isRiskLocationExist in
+                        if isRiskLocationExist == false {
+                            print("해당 좌표 없음")
+                            setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: self.locationInfo2.text!, map: self.myMap)
+                                var ref: DocumentReference? = nil
+                                ref = self.db.collection("saferoad").addDocument(data: [
+                                    "latitude" : liveLatitude,
+                                    "longitude" : liveLongitude
+                                ]) { err in
+                                    if let err = err {
+                                        print("Error adding document: \(err)")
+                                    } else {
+                                        print("Document added with ID: \(ref!.documentID)")
+                                    }
+                                }
+                        } else {
+                            print("해당 좌표는 이미 존재합니다")
                         }
                     }
+                    
+                    
                     sleep(1)
                 }
                 
@@ -181,10 +192,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
   
-    func downloadRiskLocation(completion: @escaping (Bool) -> Void) {
+    func checkRiskLocationExist(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
         var isRiskLocationExist:Bool = false
         let query = db.collection("saferoad")
-            .whereField("latitude", isEqualTo: 37.311)
+            .whereField("latitude", isEqualTo: latitude)
+            .whereField("longitude", isEqualTo: longitude)
         query.getDocuments { snapshot, error in
           if let error = error {
             print(error)
@@ -194,10 +206,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             for _ in snapshot!.documents {
 //            let cat = doc
 //            catArray.append(cat)
-              isRiskLocationExist = (snapshot?.documents.isEmpty)!
-                isRiskLocationExist = true
-            
-              
+                
+                //만약 없는좌표 -> false, 있는좌표 -> true
+              isRiskLocationExist = !((snapshot?.documents.isEmpty)!)
           }
           completion(isRiskLocationExist)
         }
