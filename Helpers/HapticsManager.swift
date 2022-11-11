@@ -31,4 +31,9 @@ final class HapticsManager {
         }
     }
     
+    public func impact(style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let vibrationGenerator = UIImpactFeedbackGenerator(style: style)
+        vibrationGenerator.impactOccurred()
+    }
+    
 }

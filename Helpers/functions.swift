@@ -53,4 +53,25 @@ func riskLocationData(database: Firestore!, mapToPin: MKMapView) {
         }
     }
 }
+var isRiskLocationExist: Bool = false
+func checkRiskLocationAleadyExist(database: Firestore!, latitude: Double, longitude: Double) -> Bool {
+    
+    
+    let docRef = database.collection("saferoad")
+        .whereField("latitude", isEqualTo: latitude)
+        .whereField("longitude", isEqualTo: longitude)
+    docRef.getDocuments { (querysnapshot, error) in
+        
+        guard let data = querysnapshot?.documents else {return }
+        
+        isRiskLocationExist = data.isEmpty
+    }
+    
+    
+    return isRiskLocationExist
+}
+
+
+
+
 

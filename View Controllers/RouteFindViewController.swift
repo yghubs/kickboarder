@@ -67,8 +67,8 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         locationManager.startUpdatingLocation()
         
         mapView.showsUserLocation = true
-        mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (locationManager.location?.coordinate.latitude)!, longitude: (locationManager.location?.coordinate.longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        
+        guard let userLocation = locationManager.location?.coordinate else {return }
+        mapView.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
         
@@ -287,10 +287,11 @@ extension RouteFindViewController {
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
                 
                 //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 3 {
+                if accelMagnitude > 2.5 {
+                    let digit: Double = pow(10, 3) // 10의 3제곱
                     self.currentLoc = self.locationManager.location
-                    let liveLatitude = Double(self.currentLoc.coordinate.latitude)
-                    let liveLongitude = Double(self.currentLoc.coordinate.longitude)
+                    let liveLatitude = round(self.currentLoc.coordinate.latitude * digit) / digit
+                    let liveLongitude = round(self.currentLoc.coordinate.longitude * digit) / digit
                     setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: "", map: self.mapView)
                     self.haptic.vibrate(for: .success)
                     var ref: DocumentReference? = nil

@@ -23,10 +23,11 @@
 		735E708C28EE92770076820E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735E708A28EE92770076820E /* LaunchScreen.storyboard */; };
 		73665DD428FE746A0017ECA4 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73665DD328FE746A0017ECA4 /* HapticsManager.swift */; };
 		73709EFA290113B40008F39D /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73709EF9290113B40008F39D /* CustomTabBar.swift */; };
-		7382E4E52913EDA1008AC55C /* functionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382E4E42913EDA1008AC55C /* functionHelper.swift */; };
+		7382E4E52913EDA1008AC55C /* functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382E4E42913EDA1008AC55C /* functions.swift */; };
 		739695BC2914DA8900B0FF26 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739695BB2914DA8900B0FF26 /* UIImageExtension.swift */; };
 		739695BF2914E77900B0FF26 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739695BE2914E77900B0FF26 /* Property.swift */; };
 		739695C12915045400B0FF26 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739695C02915045400B0FF26 /* UIViewExtension.swift */; };
+		73B5F0CE291E156D00056181 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B5F0CD291E156D00056181 /* UIDeviceExtension.swift */; };
 		73C202CA28F662C000141F15 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C202C928F662C000141F15 /* CoreLocation.framework */; };
 		73C202CE28F679AB00141F15 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C202CD28F679AB00141F15 /* Marker.swift */; };
 		73DF07C928EED807007026FA /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73DF07C828EED807007026FA /* MapViewController.swift */; };
@@ -44,10 +45,11 @@
 		735E708D28EE92770076820E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73665DD328FE746A0017ECA4 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		73709EF9290113B40008F39D /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
-		7382E4E42913EDA1008AC55C /* functionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = functionHelper.swift; sourceTree = "<group>"; };
+		7382E4E42913EDA1008AC55C /* functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = functions.swift; sourceTree = "<group>"; };
 		739695BB2914DA8900B0FF26 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		739695BE2914E77900B0FF26 /* Property.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		739695C02915045400B0FF26 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		73B5F0CD291E156D00056181 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		73C202C928F662C000141F15 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		73C202CD28F679AB00141F15 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		73DF07C828EED807007026FA /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -120,7 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				73665DD328FE746A0017ECA4 /* HapticsManager.swift */,
-				7382E4E42913EDA1008AC55C /* functionHelper.swift */,
+				7382E4E42913EDA1008AC55C /* functions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -156,6 +158,7 @@
 				739695BB2914DA8900B0FF26 /* UIImageExtension.swift */,
 				739695BE2914E77900B0FF26 /* Property.swift */,
 				739695C02915045400B0FF26 /* UIViewExtension.swift */,
+				73B5F0CD291E156D00056181 /* UIDeviceExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -252,7 +255,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7382E4E52913EDA1008AC55C /* functionHelper.swift in Sources */,
+				7382E4E52913EDA1008AC55C /* functions.swift in Sources */,
+				73B5F0CE291E156D00056181 /* UIDeviceExtension.swift in Sources */,
 				735E708028EE92750076820E /* AppDelegate.swift in Sources */,
 				739695C12915045400B0FF26 /* UIViewExtension.swift in Sources */,
 				73709EFA290113B40008F39D /* CustomTabBar.swift in Sources */,
