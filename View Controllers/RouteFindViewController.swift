@@ -15,7 +15,6 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     
     let locationManager = CLLocationManager()
     let motionManager = CMMotionManager()
-    let haptic = HapticsManager.shared
     
     var currentLoc: CLLocation!
     var destinationCoordinate = CLLocationCoordinate2D()
@@ -49,6 +48,20 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             removeAllAnnotations()
             
         }
+        
+        if Reachability.isConnectedToNetwork() == false {
+            let alertController = UIAlertController(
+                        title: "네트워크에 접속할 수 없습니다.",
+                        message: "네트워크 연결 상태를 확인해주세요.",
+                        preferredStyle: .alert
+                    )
+            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+                
+               }
+            alertController.addAction(confirmAction)
+            present(alertController, animated: false, completion: nil)
+        }
+
       }
     
     
@@ -291,7 +304,7 @@ extension RouteFindViewController {
                     let liveLatitude = round(self.currentLoc.coordinate.latitude * digit) / digit
                     let liveLongitude = round(self.currentLoc.coordinate.longitude * digit) / digit
                     setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: "", map: self.mapView)
-                    self.haptic.vibrate(for: .success)
+                    UIDevice.vibrate()
                     var ref: DocumentReference? = nil
                     ref = self.dbInRouteFind.collection("saferoad").addDocument(data: [
                         "latitude" : liveLatitude,
@@ -319,7 +332,7 @@ extension RouteFindViewController {
                         
                         let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
                         if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
-                            self.haptic.vibrate(for: .warning)
+                            UIDevice.vibrate()
                         }
                     }
                     

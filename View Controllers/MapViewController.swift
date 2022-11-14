@@ -36,13 +36,28 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             mapGuideLabel.text = "재생 버튼을 누르면 탐지가 실행됩니다"
             
         }
+        
+        if Reachability.isConnectedToNetwork() == false {
+            let alertController = UIAlertController(
+                        title: "네트워크에 접속할 수 없습니다.",
+                        message: "네트워크 연결 상태를 확인해주세요.",
+                        preferredStyle: .alert
+                    )
+            let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+                
+               }
+            alertController.addAction(confirmAction)
+            present(alertController, animated: false, completion: nil)
+            playState = false
+        }
+        
+        
     }
     
 
     let locationManager = CLLocationManager()
     let motionManager = CMMotionManager()
     let database = Firestore.firestore()
-    let haptic = HapticsManager.shared
     var currentLoc: CLLocation!
     
     
@@ -68,7 +83,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 //        downloadRiskLocation { isRiskLocationExist in
 //            print(isRiskLocationExist)
 //        }
-       
+      
         
     }
     
@@ -198,7 +213,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                         
                         let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
                         if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
-                            self.haptic.vibrate(for: .warning)
+                            UIDevice.vibrate()
                         }
                     }
                     

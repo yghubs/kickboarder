@@ -53,24 +53,20 @@ func riskLocationData(database: Firestore!, mapToPin: MKMapView) {
         }
     }
 }
-var isRiskLocationExist: Bool = false
-func checkRiskLocationAleadyExist(database: Firestore!, latitude: Double, longitude: Double) -> Bool {
-    
-    
-    let docRef = database.collection("saferoad")
-        .whereField("latitude", isEqualTo: latitude)
-        .whereField("longitude", isEqualTo: longitude)
-    docRef.getDocuments { (querysnapshot, error) in
-        
-        guard let data = querysnapshot?.documents else {return }
-        
-        isRiskLocationExist = data.isEmpty
+func isNetWorkConnected() {
+    if Reachability.isConnectedToNetwork() == false {
+        let alertController = UIAlertController(
+            title: "네트워크에 접속할 수 없습니다.",
+            message: "네트워크 연결 상태를 확인해주세요.",
+            preferredStyle: .alert
+        )
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
+            
+        }
+        alertController.addAction(confirmAction)
     }
     
-    
-    return isRiskLocationExist
 }
-
 
 
 

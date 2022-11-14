@@ -104,6 +104,21 @@
             </objects>
             <point key="canvasLocation" x="-907.69230769230762" y="900.71090047393363"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="wfu-0J-eDS">
+            <objects>
+                <viewController id="WpE-Og-E8X" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MM7-RI-PuZ">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="8jk-zw-peR"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BAB-9N-IhK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="875" y="1134"/>
+        </scene>
         <!--Vibration View Controller-->
         <scene sceneID="f7W-9K-qXM">
             <objects>
