@@ -54,20 +54,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         // 위치 데이터를 추적하기 위해 사용자에게 승인 요구
         locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-        guard let userLocation = locationManager.location?.coordinate else {return }
-        myMap.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        
-        
-        
         // 위치 업데이트를 시작
         locationManager.startUpdatingLocation()
         // 위치 보기 설정
         myMap.showsUserLocation = true
        
-        
-        
-        
         db = Firestore.firestore()
         
         //MARK: accelerometer & gyroscope Data
@@ -94,17 +85,43 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidDisappear(animated)
         playState = false
     }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            guard let userLocation = locationManager.location?.coordinate else {return }
+            myMap.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            break
+        case .restricted, .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .denied:
+            let alert = UIAlertController(title: "위치권한 거부", message: "설정에서 위치권한을 허용으로 바꾸면 앱이 실행됩니다", preferredStyle: UIAlertController.Style.alert)
+            let okAction = UIAlertAction(title: "확인", style: .default) { (action) in
+                exit(-1)
+            }
+            alert.addAction(okAction)
+            present(alert, animated: false, completion: nil)
+        @unknown default:
+            return
+        }
+    }
  
     var userLocationRecord = [CLLocation]()
     
-  
+//
+//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//
+       
+//
+//    }
     
     // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+       
         if playState == true {
             
-            myMap.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)), animated: false)
+            myMap.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)), animated: true)
             
             let pLocation = locations.last
             userLocationRecord.append(pLocation!)

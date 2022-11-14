@@ -255,9 +255,7 @@ extension RouteFindViewController {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if routeFindPlayState == true {
-            
-            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
-            
+//            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
             let pLocation = locations.last
             routeFindUserLocatioRecord.append(pLocation!)
             print(routeFindUserLocatioRecord.count)
