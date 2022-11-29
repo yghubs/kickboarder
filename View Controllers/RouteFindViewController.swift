@@ -20,49 +20,49 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     var destinationCoordinate = CLLocationCoordinate2D()
     var dbInRouteFind: Firestore!
     var routeFindPlayState: Bool = false
-
+    
     
     @IBOutlet weak var guideLabel: UILabel!
-    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var routeFindPlayBtn: UIButton!
     @IBAction func findBtnDidTap(_ sender: Any) {
         
-        var userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
-
-        routeFindPlayState = !routeFindPlayState
+        let userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
         
-        if routeFindPlayState {
-            routeFindPlayBtn.setImage(UIImage(systemName: "pause", withConfiguration: mediumConfiguration)?.withRenderingMode(.alwaysTemplate), for: .normal)
-            routeFindPlayBtn.setTitle("", for: .normal)
-            createPath(sourceLocation: userCurrentCoordinate, destinationLocation: destinationCoordinate)
-            
-        } else {
-//            let largeConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
-            routeFindPlayBtn.backgroundColor = .systemBlue
-            routeFindPlayBtn.setTitle("시작", for: .normal)
-            routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
-            routeFindPlayBtn.tintColor = .white
-            guideLabel.text = "목적지를 지도에서 탭하세요"
-            removeAllOverlays()
-            removeAllAnnotations()
-            
-        }
-        
-        if Reachability.isConnectedToNetwork() == false {
+        if Reachability.isConnectedToNetwork() { // 네트워크 연결 성공하면
+            routeFindPlayState = !routeFindPlayState
+            if routeFindPlayState {
+                routeFindPlayBtn.setImage(UIImage(systemName: "pause", withConfiguration: mediumConfiguration)?.withRenderingMode(.alwaysTemplate), for: .normal)
+                routeFindPlayBtn.setTitle("", for: .normal)
+                createPath(sourceLocation: userCurrentCoordinate, destinationLocation: destinationCoordinate)
+                
+            } else {
+                //            let largeConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
+                routeFindPlayBtn.backgroundColor = .systemBlue
+                routeFindPlayBtn.setTitle("시작", for: .normal)
+                routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
+                routeFindPlayBtn.tintColor = .white
+                guideLabel.text = "목적지를 지도에서 탭하세요"
+                removeAllOverlays()
+                removeAllAnnotations()
+                
+            }
+        }         else if Reachability.isConnectedToNetwork() == false {
             let alertController = UIAlertController(
-                        title: "네트워크에 접속할 수 없습니다.",
-                        message: "네트워크 연결 상태를 확인해주세요.",
-                        preferredStyle: .alert
-                    )
+                title: "네트워크에 접속할 수 없습니다.",
+                message: "네트워크 연결 상태를 확인해주세요.",
+                preferredStyle: .alert
+            )
             let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
                 
-               }
+            }
             alertController.addAction(confirmAction)
             present(alertController, animated: false, completion: nil)
         }
-
-      }
+        
+        
+        
+    }
     
     
     
@@ -75,7 +75,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         
         // 정확도를 최고로 설정
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-       
+        
         // 위치 업데이트를 시작
         locationManager.startUpdatingLocation()
         
@@ -94,7 +94,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guideLabel.blink()
-
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -102,19 +102,19 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         routeFindPlayState = false
     }
     
-//    func removeEverythingIfPlayStateIsFalse() {
-//        if routeFindPlayState == false {
-//            removeAllOverlays()
-//            removeAllAnnotations()
-//            guideLabel.text = "목적지를 지도에서 탭하세요"
-//        }
-//    }
+    //    func removeEverythingIfPlayStateIsFalse() {
+    //        if routeFindPlayState == false {
+    //            removeAllOverlays()
+    //            removeAllAnnotations()
+    //            guideLabel.text = "목적지를 지도에서 탭하세요"
+    //        }
+    //    }
     
     private func initView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.didTappedMapView(_:)))
         self.mapView.addGestureRecognizer(tap)
-       
-
+        
+        
     }
     
     //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -122,7 +122,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     //        let startLocationCoordinates = CLLocationCoordinate2D(latitude: (locations.last?.coordinate.latitude)!, longitude: (locations.last?.coordinate.longitude)!)
     //    }
     
-
+    
     func createPath(sourceLocation : CLLocationCoordinate2D, destinationLocation : CLLocationCoordinate2D) {
         
         let sourcePlaceMark = MKPlacemark(coordinate: sourceLocation, addressDictionary: nil)
@@ -148,7 +148,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             destinationAnotation.coordinate = location.coordinate
         }
         
-//        self.mapView.showAnnotations([sourceAnotation, destinationAnotation], animated: true)
+        //        self.mapView.showAnnotations([sourceAnotation, destinationAnotation], animated: true)
         
         let directionRequest = MKDirections.Request()
         directionRequest.source = sourceMapItem
@@ -171,19 +171,19 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             //            let rect = route.polyline.boundingMapRect
             //            self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
             //            riskLocationData(database: self.db, mapToPin: self.mapView)
-
+            
         }
-//        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
-
-
+        //        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
+        
+        
     }
     
     var routeFindUserLocatioRecord = [CLLocation]()
-
+    
 }
 
 extension RouteFindViewController {
-
+    
     
     //제스처 조작
     @objc
@@ -204,7 +204,7 @@ extension RouteFindViewController {
         routeFindPlayBtn.setTitle("시작", for: .normal)
         routeFindPlayBtn.setImage(UIImage(systemName: "scooter"), for: .normal)
         routeFindPlayBtn.tintColor = .white
-
+        
         
         
         //        if sender.state == .ended {
@@ -228,7 +228,7 @@ extension RouteFindViewController {
     private func removeAllOverlays() {
         let allOverlays = self.mapView.overlays
         self.mapView.removeOverlays(allOverlays)
-
+        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -253,11 +253,11 @@ extension RouteFindViewController {
             let image = UIImage(named: "startPin")
             let resizedImage = image?.resized(to: CGSize(width: 29.04, height: 40.23))
             annotationView?.image = resizedImage
-        
+            
         case "basic":
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold, scale: .medium)
             annotationView?.image = UIImage(systemName: "mappin", withConfiguration: largeConfig)?.withRenderingMode(.alwaysTemplate).imageWithColor(color1: UIColor.red)
-        
+            
         default:
             break
         }
@@ -268,7 +268,7 @@ extension RouteFindViewController {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if routeFindPlayState == true {
-//            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+            //            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
             let pLocation = locations.last
             routeFindUserLocatioRecord.append(pLocation!)
             print(routeFindUserLocatioRecord.count)
@@ -276,19 +276,19 @@ extension RouteFindViewController {
                 routeFindUserLocatioRecord.removeAll()
             }
             
-//            CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
-//                let pm = placemarks?.first
-//                var address: String = ""
-//                if pm?.locality != nil {
-//                    address += " "
-//                    address += pm!.locality!
-//                }
-//                if pm?.thoroughfare != nil {
-//                    address += " "
-//                    address += pm!.thoroughfare!
-//                }
-//                self.locationInfo2.text = "현위치 \(address)"
-//            })
+            //            CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
+            //                let pm = placemarks?.first
+            //                var address: String = ""
+            //                if pm?.locality != nil {
+            //                    address += " "
+            //                    address += pm!.locality!
+            //                }
+            //                if pm?.thoroughfare != nil {
+            //                    address += " "
+            //                    address += pm!.thoroughfare!
+            //                }
+            //                self.locationInfo2.text = "현위치 \(address)"
+            //            })
             
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 guard let data = self.motionManager.accelerometerData else {return }

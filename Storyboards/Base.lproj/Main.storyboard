@@ -200,12 +200,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="791"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="주소 정보" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRZ-7p-q2d">
-                                <rect key="frame" x="163.66666666666666" y="638.33333333333337" width="63" height="21"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqD-GN-Rwn" userLabel="playBtn">
                                 <rect key="frame" x="158" y="679.33333333333337" width="75" height="61.666666666666629"/>
                                 <state key="normal" title="Button"/>
@@ -224,18 +218,32 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="가장 근접한 위험좌표 :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mS4-e3-E6n">
+                                <rect key="frame" x="20" y="638.33333333333337" width="150" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UUE-73-XPM">
+                                <rect key="frame" x="178" y="638.33333333333337" width="11.333333333333343" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="mS4-e3-E6n" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="20" id="1oQ-1A-VIQ"/>
+                            <constraint firstItem="UUE-73-XPM" firstAttribute="centerY" secondItem="mS4-e3-E6n" secondAttribute="centerY" id="49c-O8-bTo"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="VQz-Vr-eK9" secondAttribute="trailing" constant="20" id="6me-F3-pKo"/>
-                            <constraint firstItem="bRZ-7p-q2d" firstAttribute="centerX" secondItem="ofv-ZK-eNy" secondAttribute="centerX" id="7rh-Xd-CCK"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="ofv-ZK-eNy" secondAttribute="bottom" constant="-30" id="9ei-Hj-7cA"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="top" secondItem="FTU-yo-9NS" secondAttribute="top" id="HdH-ma-9Jg"/>
-                            <constraint firstItem="pqD-GN-Rwn" firstAttribute="top" secondItem="bRZ-7p-q2d" secondAttribute="bottom" constant="20" id="LPY-Ek-c11"/>
                             <constraint firstItem="ofv-ZK-eNy" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" id="egj-gw-Te0"/>
                             <constraint firstItem="pqD-GN-Rwn" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="158" id="f49-4w-Kbe"/>
                             <constraint firstItem="VQz-Vr-eK9" firstAttribute="leading" secondItem="3DO-zw-G3V" secondAttribute="leading" constant="20" id="g6V-8N-yH0"/>
+                            <constraint firstItem="UUE-73-XPM" firstAttribute="leading" secondItem="mS4-e3-E6n" secondAttribute="trailing" constant="8" symbolic="YES" id="jbz-Kn-Ee5"/>
+                            <constraint firstItem="pqD-GN-Rwn" firstAttribute="top" secondItem="mS4-e3-E6n" secondAttribute="bottom" constant="20" id="mSw-Fp-8GM"/>
                             <constraint firstItem="VQz-Vr-eK9" firstAttribute="top" secondItem="3DO-zw-G3V" secondAttribute="top" constant="25" id="muI-bq-57a"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="trailing" secondItem="pqD-GN-Rwn" secondAttribute="trailing" constant="157" id="nUO-E7-HLO"/>
                             <constraint firstItem="3DO-zw-G3V" firstAttribute="bottom" secondItem="pqD-GN-Rwn" secondAttribute="bottom" constant="20" id="sOW-8x-AFD"/>
@@ -247,8 +255,8 @@
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="distanceLabel" destination="UUE-73-XPM" id="oYz-wk-e8D"/>
                         <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
-                        <outlet property="locationInfo2" destination="bRZ-7p-q2d" id="LJ7-vJ-4ua"/>
                         <outlet property="mapGuideLabel" destination="VQz-Vr-eK9" id="v4R-YC-EkO"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
                         <outlet property="playBtn" destination="pqD-GN-Rwn" id="uHS-FS-AYG"/>
