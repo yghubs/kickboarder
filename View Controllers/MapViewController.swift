@@ -22,6 +22,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
     
+    
+    let locationManager = CLLocationManager()
+    let motionManager = CMMotionManager()
+    let database = Firestore.firestore()
+    var currentLoc: CLLocation!
+    
     @IBAction func playStateBtnDidTap(_ sender: Any) {
         if Reachability.isConnectedToNetwork() {
             playState = !playState
@@ -53,11 +59,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    
-    let locationManager = CLLocationManager()
-    let motionManager = CMMotionManager()
-    let database = Firestore.firestore()
-    var currentLoc: CLLocation!
+   
     
     
     override func viewDidLoad() {
@@ -77,12 +79,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         //MARK: accelerometer & gyroscope Data
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
-        riskLocationData(database: db, mapToPin: myMap)
+//        riskLocationData(database: db, mapToPin: myMap)
         //        downloadRiskLocation { isRiskLocationExist in
         //            print(isRiskLocationExist)
         //        }
-        
-        
+//        getCurrectLocationInfo { userStartLatitude, userStartLongitude in
+//            print((userStartLatitude, userStartLongitude))
+//
+//        }
+        getOnly5km(mapToPin: myMap)
     }
     
     
@@ -221,7 +226,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     func checkRiskLocationExist(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
         
         var isRiskLocationExist:Bool = false
-        
         let query = db.collection("saferoad")
             .whereField("latitude", isEqualTo: latitude)
             .whereField("longitude", isEqualTo: longitude)
@@ -238,18 +242,62 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-//    func getOnly5km(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
-//
-//        let query = db.collection("saferoad")
-//            .whereField("latitude", isLessThan: <#T##Any#>)
-//
-//    }
+    
+    //MARK: - latitude +- 0.04이내 데이터만 받아서 배열에 저장
+    func getOnly5km(mapToPin: MKMapView) {
+        
+        getCurrectLocationInfo { userStartLatitude, userStartLongitude in
+            let query = self.db.collection("saferoad")
+                .whereField("latitude", isLessThan: userStartLatitude+0.5)
+                .whereField("latitude", isGreaterThan: userStartLatitude-0.5)
+            
+//                      .whereField("latitude", isGreaterThan: userStartLatitude - 0.04)
+//                      .whereField("longitude", isLessThan: userStartLongitude + 0.04)
+//                      .whereField("longitude", isGreaterThan: userStartLongitude - 0.04)
+            print(userStartLatitude)
+                  query.getDocuments { querySnapshot, error in
+                      if let error = error {
+                          print(error)
+
+                      } else {
+                          for document in querySnapshot!.documents {
+                              let latitudes = String(describing: document.get("latitude")!)
+                              let longitudes = String(describing: document.get("longitude")!)
+                              let doubleLatitudes = Double(latitudes)
+                              let doubleLongitudes = Double(longitudes)
+                              setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "basic", subtitle: "", map: mapToPin)
+                              riskLocationCoordinates.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
+                          }
+                      }
+                  }
+        }
+
+      
+    }
+    func getCurrectLocationInfo(completion: @escaping (Double, Double) -> Void) {
+
+        locationManager.requestWhenInUseAuthorization()
+        var userStartLocation: CLLocation!
+        if(CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+        CLLocationManager.authorizationStatus() == .authorizedAlways)
+        {
+           userStartLocation = locationManager.location
+            let userStartLatitude = round(userStartLocation.coordinate.latitude)
+            let userStartLongitude = round(userStartLocation.coordinate.longitude)
+            completion(userStartLatitude, userStartLongitude)
+        }
+//            completion(strFormattedAddress)
+    }
     
     
     
     
     
-    //    func checkUserNameAlreadyExist(newUserName: String, completion: @escaping(Bool) -> Void) {
+
+    
+    
+    
+    
     
 }
 

@@ -55,6 +55,9 @@ func riskLocationData(database: Firestore!, mapToPin: MKMapView) {
 }
 
 
+
+
+
 func isNetWorkConnected() {
     if Reachability.isConnectedToNetwork() == false {
         let alertController = UIAlertController(
