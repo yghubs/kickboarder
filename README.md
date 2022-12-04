@@ -9,6 +9,6 @@
 
 ## 앱 구현
 앱은 크게 지도탭과 길찾기 탭으로 구성됩니다.  
-<img width="111" alt="image" src="https://user-images.githubusercontent.com/113229215/205490842-86d2f2f0-6048-4a63-bb72-dd25ce140fc3.png">
+<img width="252" alt="image" src="https://user-images.githubusercontent.com/113229215/205490903-f1860409-6a55-429d-9eef-381496521382.png">
 
 
