@@ -13,11 +13,9 @@
 - 위험 좌표가 10m 거리 이내에 있으면 진동 알림을 줍니다
 <img width="252" alt="image" src="https://user-images.githubusercontent.com/113229215/205490903-f1860409-6a55-429d-9eef-381496521382.png">  
 - 만약 턱을 밟아 스마트폰의 가속도 크기가 2m/s^2이상이면 지도에 '충격감지' 마크를 남기고, 해당 좌표를 서버에 업로드 합니다.
-<img width="252" alt="스크린샷 2022-12-11 오후 9 07 38" src="https://user-images.githubusercontent.com/113229215/206902696-a37775be-5b28-4ac3-89f3-00cd42ef3edb.png">
-<img width="460" alt="스크린샷 2022-12-11 오후 9 45 15" src="https://user-images.githubusercontent.com/113229215/206904300-5ed1ce49-c7b7-4ab6-81ee-b5b2a3d154e6.png">  
 <figure class="half">
-<img width="252" alt="스크린샷 2022-12-11 오후 9 07 38" src="https://user-images.githubusercontent.com/113229215/206902696-a37775be-5b28-4ac3-89f3-00cd42ef3edb.png">
-<img width="460" alt="스크린샷 2022-12-11 오후 9 45 15" src="https://user-images.githubusercontent.com/113229215/206904300-5ed1ce49-c7b7-4ab6-81ee-b5b2a3d154e6.png">  
+  <img width="252" alt="스크린샷 2022-12-11 오후 9 07 38" src="https://user-images.githubusercontent.com/113229215/206902696-a37775be-5b28-4ac3-89f3-00cd42ef3edb.png">
+  <img width="460" alt="스크린샷 2022-12-11 오후 9 45 15" src="https://user-images.githubusercontent.com/113229215/206904300-5ed1ce49-c7b7-4ab6-81ee-b5b2a3d154e6.png">  
 figure>
 
 
