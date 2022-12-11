@@ -104,90 +104,6 @@
             </objects>
             <point key="canvasLocation" x="-907.69230769230762" y="900.71090047393363"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="wfu-0J-eDS">
-            <objects>
-                <viewController id="WpE-Og-E8X" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="MM7-RI-PuZ">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="8jk-zw-peR"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BAB-9N-IhK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="875" y="1134"/>
-        </scene>
-        <!--Vibration View Controller-->
-        <scene sceneID="f7W-9K-qXM">
-            <objects>
-                <viewController id="HcE-kz-Xc5" customClass="VibrationViewController" customModule="SafeRoad" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="CpP-eo-R0T">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pPL-JX-6O7">
-                                <rect key="frame" x="158" y="405" width="75" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <action selector="soundPlayBtn:" destination="HcE-kz-Xc5" eventType="touchUpInside" id="ttv-4i-xYG"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="JhJ-vf-mq9"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="104-5O-YWI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-908" y="1660"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SafeRoad" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4oq-T4-P1u">
-                                <rect key="frame" x="40" y="128" width="330" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="현재위치"/>
-                                    <segment title="중앙대학교"/>
-                                    <segment title="안산시청"/>
-                                </segments>
-                                <connections>
-                                    <action selector="locationSegment:" destination="UCB-hs-Z51" eventType="valueChanged" id="Cvg-mC-86d"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="가속도 값" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B97-w4-uJR">
-                                <rect key="frame" x="87" y="502" width="64" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="현재위치" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icb-2I-b9z">
-                                <rect key="frame" x="315" y="212" width="59" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2297" y="208"/>
-        </scene>
         <!--지도-->
         <scene sceneID="3Tc-DD-iqD">
             <objects>
@@ -256,7 +172,6 @@
                     </tabBarItem>
                     <connections>
                         <outlet property="distanceLabel" destination="UUE-73-XPM" id="oYz-wk-e8D"/>
-                        <outlet property="locationInfo1" destination="icb-2I-b9z" id="stl-dI-7LG"/>
                         <outlet property="mapGuideLabel" destination="VQz-Vr-eK9" id="v4R-YC-EkO"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
                         <outlet property="playBtn" destination="pqD-GN-Rwn" id="uHS-FS-AYG"/>

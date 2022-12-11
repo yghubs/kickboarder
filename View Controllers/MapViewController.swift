@@ -10,8 +10,12 @@ import CoreMotion
 import MapKit
 import FirebaseFirestore
 
-var riskLocationCoordinates = [CLLocation]()
+var riskLocationCoordinatesByLatitudes = [CLLocation]()
+var riskLocationCoordinatesByLongitudes = [CLLocation]()
+var riskLocationCoordinatesArray = riskLocationCoordinatesByLatitudes + riskLocationCoordinatesByLongitudes
+var riskLocationCoordinates = Array(Set(riskLocationCoordinatesArray))
 var nearestDistance:Double = 0
+
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
@@ -34,7 +38,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             if playState {
                 playBtn.setImage(UIImage(systemName: "pause.circle.fill", withConfiguration: largeConfiguration)?.withRenderingMode(.alwaysOriginal), for: .normal)
                 mapGuideLabel.text = "위험좌표에 접근하면 진동이 울립니다"
-                
+             
             } else {
                 playBtn.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: largeConfiguration)?.withRenderingMode(.alwaysOriginal), for: .normal)
                 mapGuideLabel.text = "재생 버튼을 누르면 탐지가 실행됩니다"
@@ -59,7 +63,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-   
+    
     
     
     override func viewDidLoad() {
@@ -79,22 +83,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         //MARK: accelerometer & gyroscope Data
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
-//        riskLocationData(database: db, mapToPin: myMap)
+        //        riskLocationData(database: db, mapToPin: myMap)
         //        downloadRiskLocation { isRiskLocationExist in
         //            print(isRiskLocationExist)
         //        }
-//        getCurrectLocationInfo { userStartLatitude, userStartLongitude in
-//            print((userStartLatitude, userStartLongitude))
-//
-//        }
-        getOnly5km(mapToPin: myMap)
+        //        getCurrectLocationInfo { userStartLatitude, userStartLongitude in
+        //            print((userStartLatitude, userStartLongitude))
+        //
+        //        }
     }
     
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated) // No need for semicolon
-        
+        getOnly5km(mapToPin: myMap)
         mapGuideLabel.blink()
         
     }
@@ -102,6 +105,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         playState = false
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -136,7 +140,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-       
+        
         
         if playState == true {
             
@@ -154,10 +158,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let cutOffdecimalPoint = String(format: "%.2f", nearestDistance)
                 distanceLabel.text = "\(cutOffdecimalPoint) m"
             }
+            
             if userLocationRecord.count > 10 {
                 userLocationRecord.removeAll()
                 
             }
+            
             
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
                 guard let data = self.motionManager.accelerometerData else {return }
@@ -166,10 +172,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let z = data.acceleration.z
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
                 
-                //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
+                //MARK: 가속도의 크기가 2 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
                 if accelMagnitude > 2 {
-                    //                    self.haptic.vibrate(for: .success)
-                    UIDevice.vibrate()
+                    
                     let digit: Double = pow(10, 5) // 10의 5제곱
                     self.currentLoc = self.locationManager.location
                     let liveLatitude = round(self.currentLoc.coordinate.latitude * digit) / digit
@@ -201,23 +206,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 }
                 
                 //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
-                //만약 위험 좌표와 거리가 20m 안쪽이고, 그 물체에 직진(헤딩) 중이면 알림주기
-                //    20 km/h -> 5.6m/s      20m 전에 미리 알림 줘야함
-                for i in 0..<riskLocationCoordinates.count {
-                    
-                    let lastTwoRecordedLocationOfUser = self.userLocationRecord.suffix(2)
-                    
-                    if lastTwoRecordedLocationOfUser.first != nil {
-                        let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
-                        
-                        let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
-                        if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
-                            UIDevice.vibrate()
-                        }
-                    }
-                    
+                //만약 위험 좌표와 거리가 10m 안쪽이고 속도가 0.2m/s 이상이면 진동
+                if nearestDistance < 10 && locationManager.location?.speed ?? 0 > 0.2 {
+                    UIDevice.vibrate()
                 }
-                
+           
             }
         }
     }
@@ -243,57 +236,75 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     
-    //MARK: - latitude +- 0.04이내 데이터만 받아서 배열에 저장
+    //MARK: -  위도, 경도 +-0.04이내 데이터만 받아서 배열에 저장
     func getOnly5km(mapToPin: MKMapView) {
         
         getCurrectLocationInfo { userStartLatitude, userStartLongitude in
-            let query = self.db.collection("saferoad")
-                .whereField("latitude", isLessThan: userStartLatitude+0.5)
-                .whereField("latitude", isGreaterThan: userStartLatitude-0.5)
+            let queryLatitude = self.db.collection("saferoad")
+                .whereField("latitude", isLessThan: userStartLatitude+0.04)
+                .whereField("latitude", isGreaterThan: userStartLatitude-0.04)
             
-//                      .whereField("latitude", isGreaterThan: userStartLatitude - 0.04)
-//                      .whereField("longitude", isLessThan: userStartLongitude + 0.04)
-//                      .whereField("longitude", isGreaterThan: userStartLongitude - 0.04)
-            print(userStartLatitude)
-                  query.getDocuments { querySnapshot, error in
-                      if let error = error {
-                          print(error)
-
-                      } else {
-                          for document in querySnapshot!.documents {
-                              let latitudes = String(describing: document.get("latitude")!)
-                              let longitudes = String(describing: document.get("longitude")!)
-                              let doubleLatitudes = Double(latitudes)
-                              let doubleLongitudes = Double(longitudes)
-                              setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "basic", subtitle: "", map: mapToPin)
-                              riskLocationCoordinates.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
-                          }
-                      }
-                  }
+            let queryLongitude = self.db.collection("saferoad")
+                .whereField("longitude", isLessThan: userStartLongitude+0.04)
+                .whereField("longitude", isGreaterThan: userStartLongitude-0.04)
+            
+            queryLatitude.getDocuments { querySnapshot, error in
+                if let error = error {
+                    print(error)
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        let latitudes = String(describing: document.get("latitude")!)
+                        let longitudes = String(describing: document.get("longitude")!)
+                        let doubleLatitudes = Double(latitudes)
+                        let doubleLongitudes = Double(longitudes)
+                        riskLocationCoordinatesByLatitudes.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
+                        setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "basic", subtitle: "", map: mapToPin)
+                    }
+                }
+            }
+            
+            queryLongitude.getDocuments { querySnapshot, error in
+                if let error = error {
+                    print(error)
+                    
+                } else {
+                    for document in querySnapshot!.documents {
+                        let latitudes = String(describing: document.get("latitude")!)
+                        let longitudes = String(describing: document.get("longitude")!)
+                        let doubleLatitudes = Double(latitudes)
+                        let doubleLongitudes = Double(longitudes)
+                        riskLocationCoordinatesByLongitudes.append(CLLocation(latitude: doubleLatitudes!, longitude: doubleLongitudes!))
+                        setAnnotation(latitudeValue: doubleLatitudes!, longitudeValue: doubleLongitudes!, delta: 0.1, title: "basic", subtitle: "", map: mapToPin)
+                    }
+                }
+            }
+            
         }
-
-      
+        
+        
     }
     func getCurrectLocationInfo(completion: @escaping (Double, Double) -> Void) {
-
-        locationManager.requestWhenInUseAuthorization()
-        var userStartLocation: CLLocation!
-        if(CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
-        CLLocationManager.authorizationStatus() == .authorizedAlways)
-        {
-           userStartLocation = locationManager.location
-            let userStartLatitude = round(userStartLocation.coordinate.latitude)
-            let userStartLongitude = round(userStartLocation.coordinate.longitude)
+        
+        switch locationManager.authorizationStatus {
+        case .restricted, .denied:
+            print("restricted")
+        default:
+            var userStartLocation: CLLocation!
+            userStartLocation = locationManager.location
+            let userStartLatitude = round(userStartLocation.coordinate.latitude * 100000) / 100000
+            let userStartLongitude = round(userStartLocation.coordinate.longitude * 100000) / 100000
             completion(userStartLatitude, userStartLongitude)
+            print(userStartLongitude)
+            
         }
-//            completion(strFormattedAddress)
     }
     
     
     
     
     
-
+    
     
     
     
