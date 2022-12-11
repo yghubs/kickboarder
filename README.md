@@ -16,7 +16,7 @@
 <figure class="half">
   <img width="252" alt="스크린샷 2022-12-11 오후 9 07 38" src="https://user-images.githubusercontent.com/113229215/206902696-a37775be-5b28-4ac3-89f3-00cd42ef3edb.png">
   <img width="460" alt="스크린샷 2022-12-11 오후 9 45 15" src="https://user-images.githubusercontent.com/113229215/206904300-5ed1ce49-c7b7-4ab6-81ee-b5b2a3d154e6.png">  
-figure>
+<figure>
 
 
 
