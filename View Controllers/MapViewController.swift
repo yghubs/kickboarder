@@ -15,7 +15,7 @@ var riskLocationCoordinatesByLongitudes = [CLLocation]()
 var riskLocationCoordinatesArray = riskLocationCoordinatesByLatitudes + riskLocationCoordinatesByLongitudes
 var riskLocationCoordinates = Array(Set(riskLocationCoordinatesArray))
 var nearestDistance:Double = 0
-
+var visited = Array(repeating: false, count: riskLocationCoordinates.count)
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
@@ -57,14 +57,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             present(alertController, animated: false, completion: nil)
             playState = false
         }
-        
-        
-        
-        
     }
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,14 +76,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         //MARK: accelerometer & gyroscope Data
         motionManager.startAccelerometerUpdates()
         motionManager.accelerometerUpdateInterval = 0.01
-        //        riskLocationData(database: db, mapToPin: myMap)
-        //        downloadRiskLocation { isRiskLocationExist in
-        //            print(isRiskLocationExist)
-        //        }
-        //        getCurrectLocationInfo { userStartLatitude, userStartLongitude in
-        //            print((userStartLatitude, userStartLongitude))
-        //
-        //        }
     }
     
     
@@ -128,42 +113,33 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    var userLocationRecord = [CLLocation]()
-    
-    //
-    //    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    //
-    
-    //
-    //    }
-    
-    // 위치 정보에서 국가, 지역, 도로를 추출하여 레이블에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        
         
         if playState == true {
             
             myMap.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)), animated: true)
             
             let pLocation = locations.last
-            userLocationRecord.append(pLocation!)
-            print(userLocationRecord.count)
-            
+            var distanceArray = [Double]()
+
             for i in 0..<riskLocationCoordinates.count {
                 
-                var distanceArray = [Double]()
                 distanceArray.append(pLocation?.distance(from: riskLocationCoordinates[i]) ?? 0)
-                nearestDistance = distanceArray.min() ?? 0
-                let cutOffdecimalPoint = String(format: "%.2f", nearestDistance)
-                distanceLabel.text = "\(cutOffdecimalPoint) m"
-            }
-            
-            if userLocationRecord.count > 10 {
-                userLocationRecord.removeAll()
                 
             }
-            
+                
+            for i in 0..<riskLocationCoordinates.count {
+                
+                
+                if distanceArray[i] < 10 && !visited[i]{
+                    UIDevice.vibrate()
+                    visited[i] = true
+                    print(visited)
+                }
+            }
+            nearestDistance = distanceArray.min() ?? 0
+            let cutOffdecimalPoint = String(format: "%.2f", nearestDistance)
+            distanceLabel.text = "\(cutOffdecimalPoint) m"
             
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
                 guard let data = self.motionManager.accelerometerData else {return }
@@ -204,13 +180,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                     
                     sleep(1)
                 }
-                
-                //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
-                //만약 위험 좌표와 거리가 10m 안쪽이고 속도가 0.2m/s 이상이면 진동
-                if nearestDistance < 10 && locationManager.location?.speed ?? 0 > 0.2 {
-                    UIDevice.vibrate()
-                }
-           
             }
         }
     }
