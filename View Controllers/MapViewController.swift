@@ -12,8 +12,7 @@ import FirebaseFirestore
 
 var riskLocationCoordinatesByLatitudes = [CLLocation]()
 var riskLocationCoordinatesByLongitudes = [CLLocation]()
-var riskLocationCoordinatesArray = riskLocationCoordinatesByLatitudes + riskLocationCoordinatesByLongitudes
-var riskLocationCoordinates = Array(Set(riskLocationCoordinatesArray))
+var riskLocationCoordinates = Array(Set(riskLocationCoordinatesByLatitudes + riskLocationCoordinatesByLongitudes))
 var nearestDistance:Double = 0
 var visited = Array(repeating: false, count: riskLocationCoordinates.count)
 class MapViewController: UIViewController, CLLocationManagerDelegate {
@@ -83,7 +82,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated) // No need for semicolon
         getOnly5km(mapToPin: myMap)
+        
         mapGuideLabel.blink()
+        
         
     }
     
@@ -149,7 +150,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
                 
                 //MARK: 가속도의 크기가 2 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 2 {
+                if accelMagnitude > 1.5 && playState == true{
                     
                     let digit: Double = pow(10, 5) // 10의 5제곱
                     self.currentLoc = self.locationManager.location
@@ -208,6 +209,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     //MARK: -  위도, 경도 +-0.04이내 데이터만 받아서 배열에 저장
     func getOnly5km(mapToPin: MKMapView) {
         
+        riskLocationCoordinatesByLatitudes = [CLLocation]()
+        riskLocationCoordinatesByLongitudes = [CLLocation]()
         getCurrectLocationInfo { userStartLatitude, userStartLongitude in
             let queryLatitude = self.db.collection("saferoad")
                 .whereField("latitude", isLessThan: userStartLatitude+0.04)

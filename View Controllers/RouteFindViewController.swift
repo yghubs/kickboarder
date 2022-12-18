@@ -25,6 +25,10 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     @IBOutlet weak var guideLabel: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var routeFindPlayBtn: UIButton!
+    
+    @IBOutlet weak var nearestLabelRouteFind: UILabel!
+    
+    
     @IBAction func findBtnDidTap(_ sender: Any) {
         
         let userCurrentCoordinate = CLLocationCoordinate2D(latitude: locationManager.location!.coordinate.latitude, longitude: locationManager.location!.coordinate.longitude)
@@ -47,7 +51,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
                 removeAllAnnotations()
                 
             }
-        }         else if Reachability.isConnectedToNetwork() == false {
+        } else if Reachability.isConnectedToNetwork() == false {
             let alertController = UIAlertController(
                 title: "네트워크에 접속할 수 없습니다.",
                 message: "네트워크 연결 상태를 확인해주세요.",
@@ -140,7 +144,9 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         }
         
         //riskLocation 핀꽂기
-        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
+        for i in riskLocationCoordinates {
+            setAnnotation(latitudeValue: i.coordinate.latitude, longitudeValue: i.coordinate.longitude, delta: 0.1, title: "basic", subtitle: "", map: mapView)
+        }
         
         
         let destinationAnotation = MKPointAnnotation()
@@ -173,12 +179,47 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             //            riskLocationData(database: self.db, mapToPin: self.mapView)
             
         }
-        //        riskLocationData(database: dbInRouteFind, mapToPin: mapView)
         
         
     }
     
-    var routeFindUserLocatioRecord = [CLLocation]()
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        if routeFindPlayState == true {
+
+            let pLocation = locations.last
+          
+            var distanceArrayInRouteFind = [Double]()
+
+            for i in 0..<riskLocationCoordinates.count {
+                
+                distanceArrayInRouteFind.append(pLocation?.distance(from: riskLocationCoordinates[i]) ?? 0)
+                
+            }
+                
+            for i in 0..<riskLocationCoordinates.count {
+                
+                
+                if distanceArrayInRouteFind[i] < 10 && !visited[i]{
+                    UIDevice.vibrate()
+                    visited[i] = true
+                    print(visited)
+                }
+            }
+            nearestDistance = distanceArrayInRouteFind.min() ?? 0
+            let cutOffdecimalPointInRouteFind = String(format: "%.2f", nearestDistance)
+            nearestLabelRouteFind.text = "\(cutOffdecimalPointInRouteFind) m"
+            
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                guard let data = self.motionManager.accelerometerData else {return }
+                let x = data.acceleration.x
+                let y = data.acceleration.y
+                let z = data.acceleration.z
+                let accelMagnitude = sqrt(x*x + y*y + z*z)
+           
+            }
+        }
+    }
     
 }
 
@@ -265,81 +306,6 @@ extension RouteFindViewController {
         return annotationView
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        if routeFindPlayState == true {
-            //            mapView.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
-            let pLocation = locations.last
-            routeFindUserLocatioRecord.append(pLocation!)
-            print(routeFindUserLocatioRecord.count)
-            if routeFindUserLocatioRecord.count > 10 {
-                routeFindUserLocatioRecord.removeAll()
-            }
-            
-            //            CLGeocoder().reverseGeocodeLocation(pLocation!, completionHandler: {(placemarks, error) -> Void in
-            //                let pm = placemarks?.first
-            //                var address: String = ""
-            //                if pm?.locality != nil {
-            //                    address += " "
-            //                    address += pm!.locality!
-            //                }
-            //                if pm?.thoroughfare != nil {
-            //                    address += " "
-            //                    address += pm!.thoroughfare!
-            //                }
-            //                self.locationInfo2.text = "현위치 \(address)"
-            //            })
-            
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                guard let data = self.motionManager.accelerometerData else {return }
-                let x = data.acceleration.x
-                let y = data.acceleration.y
-                let z = data.acceleration.z
-                let accelMagnitude = sqrt(x*x + y*y + z*z)
-                
-                //MARK: 가속도가 임계값 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 2.5 {
-                    let digit: Double = pow(10, 3) // 10의 3제곱
-                    self.currentLoc = self.locationManager.location
-                    let liveLatitude = round(self.currentLoc.coordinate.latitude * digit) / digit
-                    let liveLongitude = round(self.currentLoc.coordinate.longitude * digit) / digit
-                    setAnnotation(latitudeValue: liveLatitude, longitudeValue: liveLongitude, delta: 0.1, title: "충격 감지", subtitle: "", map: self.mapView)
-                    UIDevice.vibrate()
-                    var ref: DocumentReference? = nil
-                    ref = self.dbInRouteFind.collection("saferoad").addDocument(data: [
-                        "latitude" : liveLatitude,
-                        "longitude" : liveLongitude
-                    ]) { err in
-                        if let err = err {
-                            print("Error adding document: \(err)")
-                        } else {
-                            print("Document added with ID: \(ref!.documentID)")
-                        }
-                    }
-                    sleep(1)
-                }
-                
-                //MARK: - riskLocation과 유저의 위치가 특정값 이하면 진동
-                //만약 위험 좌표와 거리가 20m 안쪽이고, 그 물체에 직진(헤딩) 중이면 알림주기
-                //    20 km/h -> 5.6m/s      20m 전에 미리 알림 줘야함
-                for i in 0..<riskLocationCoordinates.count {
-                    
-                    
-                    let lastTwoRecordedLocationOfUser = self.routeFindUserLocatioRecord.suffix(2)
-                    
-                    if lastTwoRecordedLocationOfUser.first != nil {
-                        let velocityRushingToRisk = lastTwoRecordedLocationOfUser.first!.distance(from: riskLocationCoordinates[i]) - lastTwoRecordedLocationOfUser.last!.distance(from: riskLocationCoordinates[i])
-                        
-                        let userCurrentSpeedToDouble = Double(String(describing: locations.last!.speed))
-                        if locations.last!.distance(from: riskLocationCoordinates[i]) < 20 && abs(userCurrentSpeedToDouble!-velocityRushingToRisk)<0.1 && userCurrentSpeedToDouble ?? 0  > 5 {
-                            UIDevice.vibrate()
-                        }
-                    }
-                    
-                }
-                
-            }
-        }
-    }
+
     
 }

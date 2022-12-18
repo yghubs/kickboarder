@@ -74,6 +74,18 @@
                                     <action selector="findBtnDidTap:" destination="hm9-ji-wYm" eventType="touchUpInside" id="bgh-uO-i1S"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="가장 근접한 위험좌표 :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mc-nr-da9">
+                                <rect key="frame" x="20" y="637" width="150" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dpr-mU-Wpg">
+                                <rect key="frame" x="180" y="637" width="12" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tYM-wW-gb0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -83,9 +95,13 @@
                             <constraint firstItem="He3-LH-C2b" firstAttribute="top" secondItem="H4S-di-ysv" secondAttribute="bottom" constant="-146" id="4Fh-tO-MAQ"/>
                             <constraint firstItem="Psv-8D-wri" firstAttribute="leading" secondItem="tYM-wW-gb0" secondAttribute="leading" constant="30" id="6VL-Eh-3tS"/>
                             <constraint firstItem="Psv-8D-wri" firstAttribute="top" secondItem="tYM-wW-gb0" secondAttribute="top" constant="20" id="Aac-8m-syo"/>
+                            <constraint firstItem="dpr-mU-Wpg" firstAttribute="centerY" secondItem="0mc-nr-da9" secondAttribute="centerY" id="Hqe-dt-wqI"/>
                             <constraint firstItem="H4S-di-ysv" firstAttribute="top" secondItem="DLJ-Ss-4J5" secondAttribute="top" id="KPi-us-e5u"/>
+                            <constraint firstItem="He3-LH-C2b" firstAttribute="top" secondItem="0mc-nr-da9" secondAttribute="bottom" constant="20" id="ODY-HC-oQt"/>
                             <constraint firstItem="He3-LH-C2b" firstAttribute="centerX" secondItem="H4S-di-ysv" secondAttribute="centerX" id="XDO-Mz-Z3I"/>
+                            <constraint firstItem="dpr-mU-Wpg" firstAttribute="leading" secondItem="0mc-nr-da9" secondAttribute="trailing" constant="10" id="ale-xq-jcI"/>
                             <constraint firstAttribute="bottom" secondItem="H4S-di-ysv" secondAttribute="bottom" constant="20" id="d8A-3w-O4v"/>
+                            <constraint firstItem="0mc-nr-da9" firstAttribute="leading" secondItem="H4S-di-ysv" secondAttribute="leading" constant="20" id="eq6-5v-rG4"/>
                             <constraint firstItem="Psv-8D-wri" firstAttribute="centerX" secondItem="H4S-di-ysv" secondAttribute="centerX" id="iY7-33-gI5"/>
                             <constraint firstItem="H4S-di-ysv" firstAttribute="leading" secondItem="tYM-wW-gb0" secondAttribute="leading" id="qXg-GZ-Lal"/>
                         </constraints>
@@ -96,6 +112,7 @@
                     <connections>
                         <outlet property="guideLabel" destination="Psv-8D-wri" id="nlN-ya-G0I"/>
                         <outlet property="mapView" destination="H4S-di-ysv" id="7ba-CU-5NE"/>
+                        <outlet property="nearestLabelRouteFind" destination="dpr-mU-Wpg" id="ViZ-Jv-kGI"/>
                         <outlet property="routeFindPlayBtn" destination="He3-LH-C2b" id="649-tz-HNc"/>
                     </connections>
                 </viewController>
