@@ -28,6 +28,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     
     @IBOutlet weak var nearestLabelRouteFind: UILabel!
     
+    @IBOutlet weak var sirenInRoute: UIImageView!
     
     @IBAction func findBtnDidTap(_ sender: Any) {
         
@@ -60,6 +61,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
             let confirmAction = UIAlertAction(title: "확인", style: .default) { _ in
                 
             }
+            
             alertController.addAction(confirmAction)
             present(alertController, animated: false, completion: nil)
         }
@@ -121,11 +123,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
         
     }
     
-    //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    //        guard locations.last != nil else {return }
-    //        let startLocationCoordinates = CLLocationCoordinate2D(latitude: (locations.last?.coordinate.latitude)!, longitude: (locations.last?.coordinate.longitude)!)
-    //    }
-    
+
     
     func createPath(sourceLocation : CLLocationCoordinate2D, destinationLocation : CLLocationCoordinate2D) {
         
@@ -184,7 +182,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        sirenInRoute.isHidden = true
         if routeFindPlayState == true {
 
             let pLocation = locations.last
@@ -202,6 +200,7 @@ class RouteFindViewController: UIViewController, CLLocationManagerDelegate, MKMa
                 
                 if distanceArrayInRouteFind[i] < 10 && !visited[i]{
                     UIDevice.vibrate()
+                    sirenInRoute.isHidden = false
                     visited[i] = true
                     print(visited)
                 }

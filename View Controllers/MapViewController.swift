@@ -15,6 +15,7 @@ var riskLocationCoordinatesByLongitudes = [CLLocation]()
 var riskLocationCoordinates = Array(Set(riskLocationCoordinatesByLatitudes + riskLocationCoordinatesByLongitudes))
 var nearestDistance:Double = 0
 var visited = Array(repeating: false, count: riskLocationCoordinates.count)
+
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var db: Firestore!
@@ -24,6 +25,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var myMap: MKMapView!
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var sirenInMap: UIImageView!
     
     
     let locationManager = CLLocationManager()
@@ -82,10 +84,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated) // No need for semicolon
         getOnly5km(mapToPin: myMap)
-        
         mapGuideLabel.blink()
         
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(riskLocationCoordinatesByLatitudes)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -115,14 +121,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        sirenInMap.isHidden = true
         if playState == true {
             
             myMap.setRegion(MKCoordinateRegion(center: (locations.last?.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)), animated: true)
             
             let pLocation = locations.last
             var distanceArray = [Double]()
-
+            
             for i in 0..<riskLocationCoordinates.count {
                 
                 distanceArray.append(pLocation?.distance(from: riskLocationCoordinates[i]) ?? 0)
@@ -134,6 +140,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 
                 if distanceArray[i] < 10 && !visited[i]{
                     UIDevice.vibrate()
+                    sirenInMap.isHidden = false
+                    print(sirenInMap.isHidden)
                     visited[i] = true
                     print(visited)
                 }
@@ -148,9 +156,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 let y = data.acceleration.y
                 let z = data.acceleration.z
                 let accelMagnitude = sqrt(x*x + y*y + z*z)
-                
                 //MARK: 가속도의 크기가 2 이상이면 지도에 마크 표시 & riskLocation 배열에 해당 좌표 추가
-                if accelMagnitude > 1.5 && playState == true{
+                if accelMagnitude > 1.6 && playState == true{
                     
                     let digit: Double = pow(10, 5) // 10의 5제곱
                     self.currentLoc = self.locationManager.location
@@ -209,8 +216,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     //MARK: -  위도, 경도 +-0.04이내 데이터만 받아서 배열에 저장
     func getOnly5km(mapToPin: MKMapView) {
         
-        riskLocationCoordinatesByLatitudes = [CLLocation]()
-        riskLocationCoordinatesByLongitudes = [CLLocation]()
         getCurrectLocationInfo { userStartLatitude, userStartLongitude in
             let queryLatitude = self.db.collection("saferoad")
                 .whereField("latitude", isLessThan: userStartLatitude+0.04)
@@ -219,7 +224,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             let queryLongitude = self.db.collection("saferoad")
                 .whereField("longitude", isLessThan: userStartLongitude+0.04)
                 .whereField("longitude", isGreaterThan: userStartLongitude-0.04)
-            
+            riskLocationCoordinatesByLatitudes = [CLLocation]()
+            riskLocationCoordinatesByLongitudes = [CLLocation]()
             queryLatitude.getDocuments { querySnapshot, error in
                 if let error = error {
                     print(error)

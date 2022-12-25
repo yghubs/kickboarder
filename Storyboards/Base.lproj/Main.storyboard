@@ -86,6 +86,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="light.beacon.max.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Ww3-zb-VMx">
+                                <rect key="frame" x="146" y="522.33333333333337" width="99.000000000000028" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="70"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tYM-wW-gb0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -114,6 +120,7 @@
                         <outlet property="mapView" destination="H4S-di-ysv" id="7ba-CU-5NE"/>
                         <outlet property="nearestLabelRouteFind" destination="dpr-mU-Wpg" id="ViZ-Jv-kGI"/>
                         <outlet property="routeFindPlayBtn" destination="He3-LH-C2b" id="649-tz-HNc"/>
+                        <outlet property="sirenInRoute" destination="Ww3-zb-VMx" id="Rhy-tF-FBE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="65v-Al-QfJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -163,6 +170,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="light.beacon.max.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zEP-rm-r7E">
+                                <rect key="frame" x="146" y="533.33333333333337" width="99" height="81"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="70"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3DO-zw-G3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -192,6 +205,7 @@
                         <outlet property="mapGuideLabel" destination="VQz-Vr-eK9" id="v4R-YC-EkO"/>
                         <outlet property="myMap" destination="ofv-ZK-eNy" id="LUU-Zc-C12"/>
                         <outlet property="playBtn" destination="pqD-GN-Rwn" id="uHS-FS-AYG"/>
+                        <outlet property="sirenInMap" destination="zEP-rm-r7E" id="uCo-Rv-NRn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ldn-Bb-MrO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -200,12 +214,16 @@
         </scene>
     </scenes>
     <resources>
+        <image name="light.beacon.max.fill" catalog="system" width="128" height="102"/>
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="play.circle.fill" catalog="system" width="128" height="123"/>
         <image name="point.topleft.down.curvedto.point.filled.bottomright.up" catalog="system" width="119" height="128"/>
         <image name="scooter" catalog="system" width="128" height="94"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tintColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
